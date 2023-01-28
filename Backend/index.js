@@ -6,7 +6,8 @@ const express = require('express'),
     app = express(),
     dotenv = require('dotenv').config(),
     jwt = require('jsonwebtoken'),
-    statusCode = require('http-status-codes').StatusCodes;
+    statusCode = require('http-status-codes').StatusCodes,
+    port = 8080;
 
 // CORS Handling    
 app.use(cors({
@@ -53,6 +54,6 @@ app.use('/api', apiRoute);
 app.use('/bookmark', bookmarkRoute);
 
 // Server Runner
-app.listen(process.env.PORT, () => {
-    console.log(`listening on port ${process.env.PORT}!`);
+app.listen(port, () => {
+    console.log(`listening on port ${port}!`);
 })
