@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
+  height: 100%;
 }
 
 code {
@@ -14,7 +14,7 @@ code {
 }
 
 #root {
-  height: 100vh;
+  height: 100%;
 }
 
 .MuiToolbar-root.MuiToolbar-gutters.MuiToolbar-regular {
@@ -25,10 +25,6 @@ code {
 
 .css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
   position: static !important;
-}
-
-.MuiDrawer-root.MuiDrawer-docked {
-  height: 100%;
 }
 
 a:-webkit-any-link {

@@ -11,7 +11,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Drawer, DrawerHeader } from "./styles";
 import {
   AdminMenuItems,
@@ -20,7 +20,7 @@ import {
 } from "../../utils/constants/sidebarItems";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const ToogleDrawer = () => {
     setOpen(!open);

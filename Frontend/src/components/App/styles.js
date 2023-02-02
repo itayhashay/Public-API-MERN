@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: 100vh;
+  height: 100%;
 `;
 
 export const ContentSection = styled.div`
-  height: 91vh;
+  height: fit-content;
   display: flex;
   flex-direction: row;
 `;

@@ -1,0 +1,18 @@
+{
+  "serverConfig": {
+    "baseUrl": "http://localhost:8080/api",
+    "routes": {
+      "getAllApis": "/",
+      "getLatestApis": "/latest",
+      "getBestRatedApis": "/bestrated",
+      "getRandomApi": "/random",
+      "searchApi": "/search",
+      "getApiById": "/",
+      "getTotalUpvotes": "/upvotes/count",
+      "getTotalApis": "/count",
+      "createApi": "/",
+      "upvoteApi": "/upvote",
+      "updateApi": "/"
+    }
+  }
+}
