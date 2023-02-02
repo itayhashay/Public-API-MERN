@@ -1,6 +1,8 @@
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 
+export const MenuItemIcon = styled("img")(() => ({}));
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -28,7 +30,6 @@ export const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "baseline",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   height: "35px",

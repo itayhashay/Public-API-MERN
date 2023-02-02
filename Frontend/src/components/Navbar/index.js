@@ -11,13 +11,21 @@ export const Navbar = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, fontSize: "4vh" }}
+          >
             Public API
           </Typography>
           <UserSection>
-            <Button color="inherit">Log in</Button>
+            <Button color="inherit" sx={{ fontSize: "2vh" }}>
+              Log in
+            </Button>
             <DividerLine />
-            <Button color="inherit">Sign up</Button>
+            <Button color="inherit" sx={{ fontSize: "2vh" }}>
+              Sign up
+            </Button>
           </UserSection>
         </Toolbar>
       </AppBar>

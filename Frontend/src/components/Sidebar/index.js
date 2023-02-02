@@ -9,8 +9,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { Link } from "react-router-dom";
 import { Drawer, DrawerHeader } from "./styles";
 import {
@@ -53,7 +51,7 @@ const Sidebar = () => {
                       justifyContent: "center",
                     }}
                   >
-                    {item.id % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    {item.icon}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.displayName}
@@ -83,7 +81,7 @@ const Sidebar = () => {
                       justifyContent: "center",
                     }}
                   >
-                    {item.id % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    {item.icon}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.displayName}
@@ -99,7 +97,6 @@ const Sidebar = () => {
           {UserMenuActions.map((item) => (
             <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
               <Link to={`${item.urlName}`}>
-                {" "}
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -114,7 +111,7 @@ const Sidebar = () => {
                       justifyContent: "center",
                     }}
                   >
-                    {item.id % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    {item.icon}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.displayName}

@@ -11,4 +11,5 @@ export const DividerLine = styled.hr`
   background: white;
   border: none;
   border-radius: 15px;
+  font-size: 2vh;
 `;

@@ -3,6 +3,7 @@ import { Container, ContentSection, TabContent } from "./styles";
 import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
 import GenericApiList from "../GenericApiList";
+import AddApi from "../AddApi";
 import RoutesUrls from "../../utils/constants/routes";
 import * as APIS_FLAGS from "../../utils/constants/apiListFlags";
 
@@ -37,7 +38,7 @@ const App = () => {
             <Route
               exact
               path={`/${RoutesUrls.ADD_API}`}
-              element={<GenericApiList flag={APIS_FLAGS.LATEST_APIS} />}
+              element={<AddApi />}
             ></Route>
           </Routes>
         </TabContent>

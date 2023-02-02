@@ -6,11 +6,13 @@ export const Container = styled.div`
 
 export const ContentSection = styled.div`
   height: fit-content;
+  min-height: 91vh;
   display: flex;
   flex-direction: row;
 `;
 
 export const TabContent = styled.div`
-  height: 100%;
   width: -webkit-fill-available;
+  max-height: 91vh;
+  overflow: auto;
 `;
