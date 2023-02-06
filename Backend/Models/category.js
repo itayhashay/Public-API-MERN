@@ -3,8 +3,9 @@ const categorySchema = new mongoose.Schema({
 
     name: {
         type: String,
-        require: true,
-        trim: true
+        required: true,
+        trim: true,
+        unique: true
     },
     description: {
         type: String,
