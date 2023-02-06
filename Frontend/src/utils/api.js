@@ -24,3 +24,12 @@ export const getRandomApi = async () => {
 
   return response.data.data;
 };
+
+export const addNewApi = async (data) => {
+  const response = await axios.post(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.createApi}`,
+    data
+  );
+
+  return response.data.data;
+};

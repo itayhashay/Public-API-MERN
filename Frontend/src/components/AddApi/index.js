@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -7,7 +7,6 @@ import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 import Categories from "../../utils/constants/categories";
-
 import {
   Container,
   FormContainer,
@@ -16,12 +15,35 @@ import {
   FieldsContainer,
   FieldName,
 } from "./styles";
+import { addNewApi } from "../../utils/api";
+import { toasterMessage } from "../../utils/toasterMessage";
+import { toasterTypes } from "../../utils/constants/toaster";
 
 const AddApi = () => {
   const [category, setCategory] = useState("");
+  const apiNameRef = useRef(null);
+  const apiDescRef = useRef(null);
+  const apiUrlRef = useRef(null);
 
   const handleChange = (event) => {
     setCategory(event.target.value);
+  };
+
+  const onSubmit = async () => {
+    const data = {
+      name: apiNameRef.current.value,
+      description: apiDescRef.current.value,
+      url: apiUrlRef.current.value,
+      category: category,
+      img: "",
+    };
+
+    await addNewApi(data);
+
+    toasterMessage(
+      toasterTypes.SUCCESS,
+      `Api ${data.name} Created successfuly!`
+    );
   };
 
   return (
@@ -33,6 +55,7 @@ const AddApi = () => {
             <FieldName>Api Name: </FieldName>
             <TextField
               id="standard-basic"
+              inputRef={apiNameRef}
               variant="standard"
               sx={{
                 width: "-webkit-fill-available",
@@ -43,6 +66,7 @@ const AddApi = () => {
             <FieldName>Api Description: </FieldName>
             <TextField
               id="standard-basic"
+              inputRef={apiDescRef}
               variant="standard"
               sx={{
                 width: "-webkit-fill-available",
@@ -53,6 +77,7 @@ const AddApi = () => {
             <FieldName>Api Url: </FieldName>
             <TextField
               id="standard-basic"
+              inputRef={apiUrlRef}
               variant="standard"
               sx={{
                 width: "-webkit-fill-available",
@@ -87,7 +112,7 @@ const AddApi = () => {
             </FormControl>
           </FieldContainer>
         </FieldsContainer>
-        <Button variant="contained" endIcon={<SendIcon />}>
+        <Button variant="contained" onClick={onSubmit} endIcon={<SendIcon />}>
           Send
         </Button>
       </FormContainer>
