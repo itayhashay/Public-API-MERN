@@ -3,36 +3,37 @@ const userSchema = new mongoose.Schema({
 
     username: {
         type: String,
-        require: true,
-        trim: true
+        required: true,
+        trim: true,
+        unique: true
     },
     firstName: {
         type: String,
-        require: true,
+        required: true,
         trim: true
     },
     lastName: {
         type: String,
-        require: true,
+        required: true,
         trim: true
     },
     gender: {
         type: String,
-        require: true,
+        required: true,
         enum: ['Male', 'Female']
     },
     birthday: {
         type: Date,
-        require: true
+        required: true
     },
     email: {
         type: String,
-        require: true,
+        required: true,
         trim: true
     },
     password: {
         type: String,
-        require: true
+        required: true
     },
     userType: {
         type: String,
