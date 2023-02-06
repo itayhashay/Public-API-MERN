@@ -3,26 +3,27 @@ const apiSchema = new mongoose.Schema({
 
     name: {
         type: String,
-        require: true,
+        required: true,
         trim: true
     },
     description: {
         type: String,
-        require: true
+        required: true
     },
     upvotes: {
         type: Number,
         default: 0,
-        require: true
+        required: true
     },
     url: {
         type: String,
-        require: true,
+        required: true,
         trim: true
     },
     category: {
-        type: String,
-        require: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'category',
+        required: true
     },
     img: {
         type: String,
@@ -33,9 +34,11 @@ const apiSchema = new mongoose.Schema({
         default: Date.now()
     },
     uploadBy: {
-        type: String,
-        require: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
     }
+
 })
 
 const Api = mongoose.model('api', apiSchema);
