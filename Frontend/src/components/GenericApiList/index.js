@@ -6,6 +6,7 @@ import {
   getLatestApis,
   getRandomApi,
   searchApis,
+  getAllBookmarks,
 } from "../../utils/api";
 import ApiCard from "../ApiCard";
 import { useLocation } from "react-router-dom";
@@ -31,6 +32,9 @@ const GenericApiList = ({ flag }) => {
           break;
         case APIS_FLAGS.BEST_RATED_APIS:
           apiResponse = await getBestRatedApis();
+          break;
+        case APIS_FLAGS.BOOKMARKS:
+          apiResponse = await getAllBookmarks();
           break;
         case APIS_FLAGS.RANDOM_API:
           let randomApi = await getRandomApi();

@@ -51,3 +51,11 @@ export const getAllCategories = async () => {
 
   return response.data.data;
 };
+
+export const getAllBookmarks = async () => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.bookmark.getAllBookmark}`
+  );
+
+  return response.data.data;
+};
