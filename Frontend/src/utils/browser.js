@@ -18,3 +18,7 @@ export const setSearchStorgeData = (searchValue, searchBy) => {
   localStorage.setItem("searchInput", searchValue);
   localStorage.setItem("searchBy", JSON.stringify(searchBy));
 };
+
+export const redirectToPath = (pathname) => {
+  window.location.href = pathname;
+};

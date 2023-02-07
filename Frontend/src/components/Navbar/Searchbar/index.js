@@ -25,6 +25,7 @@ import {
   initSearchStorgeData,
   getSearchStorgeData,
   setSearchStorgeData,
+  redirectToPath,
 } from "../../../utils/browser";
 
 const Searchbar = () => {
@@ -79,7 +80,9 @@ const Searchbar = () => {
     if (event.key !== "Enter" || searchValue === defaultSearchValue) return;
 
     setSearchStorgeData(searchValue, searchBy);
-    window.location.href = `${RoutesUrls.SEARCH_RESULTS}?q=${searchValue}&name=${Name}&category=${Category}&uploadby=${UploadBy}`;
+    redirectToPath(
+      `${RoutesUrls.SEARCH_RESULTS}?q=${searchValue}&name=${Name}&category=${Category}&uploadby=${UploadBy}`
+    );
   };
 
   const { Name, Category, UploadBy } = searchBy;

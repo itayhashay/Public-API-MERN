@@ -18,6 +18,8 @@ import {
 import { addNewApi } from "../../utils/api";
 import { toasterMessage } from "../../utils/toasterMessage";
 import { toasterTypes } from "../../utils/constants/toaster";
+import RoutesUrls from "../../utils/constants/routes";
+import { redirectToPath } from "../../utils/browser";
 
 const AddApi = () => {
   const [category, setCategory] = useState("");
@@ -40,6 +42,7 @@ const AddApi = () => {
 
     await addNewApi(data);
 
+    redirectToPath(RoutesUrls.LATEST_APIS);
     toasterMessage(
       toasterTypes.SUCCESS,
       `Api ${data.name} Created successfuly!`
