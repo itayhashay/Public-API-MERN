@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const bookmarkSchema = new mongoose.Schema({
 
-    userId: {
-        type: String,
-        require: true
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
     },
-    apiId: {
-        type: String,
-        require: true
+    api: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'api',
+        required: true
     }
 
 })
