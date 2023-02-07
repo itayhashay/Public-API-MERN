@@ -12,7 +12,38 @@
       "getTotalApis": "/count",
       "createApi": "/",
       "upvoteApi": "/upvote",
-      "updateApi": "/"
+      "updateApi": "/",
+      "category": {
+        "getAllCategories": "/category",
+        "getAmountsOfApis": "/category/apis/count",
+        "getById": "/category/",
+        "createCategory:": "/category/",
+        "updateCategory:": "/category/",
+        "deleteCategory:": "/category/"
+      },
+      "bookmark": {
+        "getAllBookmark": "/bookmark/",
+        "getByUser": "/bookmark/user/",
+        "getById": "/bookmark/",
+        "addBookmark": "/bookmark/",
+        "deleteBookmark": "/bookmark/"
+      },
+      "users": {
+        "getAllUsers": "/user/",
+        "apiAmountPerUser": "/user/api-per-user",
+        "searchUser": "/user/",
+        "getById": "/user/",
+        "createUser": "/user/",
+        "editUser": "/user/",
+        "deleteUser": "/user/",
+        "login": "/user/login",
+        "usersCount": "/user/count"
+      },
+      "auth": {
+        "login": "/auth/login",
+        "signup": "/auth/refresh",
+        "refreshToken": "/auth/signup"
+      }
     }
   }
 }
