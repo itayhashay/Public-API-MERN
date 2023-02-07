@@ -7,6 +7,7 @@ const RoutesUrls = {
   BEST_RATED_APIS: "best-rated-apis",
   RANDOM_API: "random-api",
   BOOKMARKS: "bookmarks",
+  SEARCH_RESULTS: "search",
   ADD_API: "add-api",
   PROFILE: "profile",
   LOGOUT: "logout",

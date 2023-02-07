@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+
 import SearchIcon from "@mui/icons-material/Search";
 import FormControl from "@mui/material/FormControl";
 import Checkbox from "@mui/material/Checkbox";
@@ -14,15 +16,22 @@ import { Container, FilterContainer, TitleText, checkboxStyle } from "./styles";
 
 import { toasterMessage } from "../../../utils/toasterMessage";
 import { toasterTypes } from "../../../utils/constants/toaster";
+import RoutesUrls from "../../../utils/constants/routes";
+import {
+  defaultSearchByValues,
+  defaultSearchValue,
+} from "../../../utils/constants/search";
+import {
+  initSearchStorgeData,
+  getSearchStorgeData,
+  setSearchStorgeData,
+} from "../../../utils/browser";
 
 const Searchbar = () => {
-  const [searchBy, setSearchBy] = useState({
-    Name: true,
-    Category: true,
-    UploadBy: true,
-  });
-
+  const [searchBy, setSearchBy] = useState(defaultSearchByValues);
   const [isValid, setIsValid] = useState(true);
+  const searchInputRef = useRef();
+  const location = useLocation();
 
   useEffect(() => {
     const trueParameters = Object.values(searchBy).filter((p) => p);
@@ -32,11 +41,45 @@ const Searchbar = () => {
     setIsValid(trueParameters.length !== 0);
   }, [searchBy]);
 
+  useEffect(() => {
+    if (location.pathname === `/${RoutesUrls.SEARCH_RESULTS}`) {
+      getDataFromStorage();
+    } else {
+      initializeSearch();
+    }
+  }, [location]);
+
+  const getDataFromStorage = () => {
+    const { searchInputStg, searchByStg } = getSearchStorgeData();
+    if (searchInputStg) {
+      searchInputRef.current.value = searchInputStg;
+    }
+    if (searchByStg) {
+      setSearchBy(JSON.parse(searchByStg));
+    }
+  };
+
+  const initializeSearch = () => {
+    initSearchStorgeData();
+    searchInputRef.current.value = defaultSearchValue;
+    setSearchBy(defaultSearchByValues);
+  };
+
   const handleChange = (event) => {
     setSearchBy({
       ...searchBy,
       [event.target.name]: event.target.checked,
     });
+  };
+
+  const handleKeyDown = (event) => {
+    const searchValue = searchInputRef.current.value;
+    const { Name, Category, UploadBy } = searchBy;
+
+    if (event.key !== "Enter" || searchValue === defaultSearchValue) return;
+
+    setSearchStorgeData(searchValue, searchBy);
+    window.location.href = `${RoutesUrls.SEARCH_RESULTS}?q=${searchValue}&name=${Name}&category=${Category}&uploadby=${UploadBy}`;
   };
 
   const { Name, Category, UploadBy } = searchBy;
@@ -48,8 +91,10 @@ const Searchbar = () => {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
+          onKeyDown={handleKeyDown}
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
+          inputRef={searchInputRef}
         />
       </Search>
       <FilterContainer>

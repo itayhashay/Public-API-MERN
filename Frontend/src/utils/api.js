@@ -33,3 +33,13 @@ export const addNewApi = async (data) => {
 
   return response.data.data;
 };
+
+export const searchApis = async (q, searchBy) => {
+  const { Name, Category, UploadBy } = searchBy;
+
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.searchApi}/?q=${q}&name=${Name}&category=${Category}&uploadby=${UploadBy}`
+  );
+
+  return response.data.data;
+};

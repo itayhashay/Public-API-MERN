@@ -16,6 +16,10 @@ const App = () => {
         <TabContent>
           <Routes>
             <Route
+              path={`/${RoutesUrls.SEARCH_RESULTS}`}
+              element={<GenericApiList flag={APIS_FLAGS.SEARCH_RESULTS} />}
+            ></Route>
+            <Route
               exact
               path={`/${RoutesUrls.LATEST_APIS}`}
               element={<GenericApiList flag={APIS_FLAGS.LATEST_APIS} />}
