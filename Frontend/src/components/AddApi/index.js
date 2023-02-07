@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -6,7 +6,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
-import Categories from "../../utils/constants/categories";
 import {
   Container,
   FormContainer,
@@ -15,17 +14,22 @@ import {
   FieldsContainer,
   FieldName,
 } from "./styles";
-import { addNewApi } from "../../utils/api";
+import { addNewApi, getAllCategories } from "../../utils/api";
 import { toasterMessage } from "../../utils/toasterMessage";
 import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import { redirectToPath } from "../../utils/browser";
 
 const AddApi = () => {
+  const [categoriesList, setCategoriesList] = useState([]);
   const [category, setCategory] = useState("");
   const apiNameRef = useRef(null);
   const apiDescRef = useRef(null);
   const apiUrlRef = useRef(null);
+
+  useEffect(() => {
+    getAllCategories().then((categories) => setCategoriesList(categories));
+  }, []);
 
   const handleChange = (event) => {
     setCategory(event.target.value);
@@ -106,9 +110,9 @@ const AddApi = () => {
                 onChange={handleChange}
                 label=""
               >
-                {Categories.map((category) => {
+                {categoriesList.map((category) => {
                   return (
-                    <MenuItem value={category.name}>{category.name}</MenuItem>
+                    <MenuItem value={category._id}>{category.name}</MenuItem>
                   );
                 })}
               </Select>

@@ -3,7 +3,7 @@ import config from "../config.json";
 
 export const getLatestApis = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.getLatestApis}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getLatestApis}`
   );
 
   return response.data.data;
@@ -11,7 +11,7 @@ export const getLatestApis = async () => {
 
 export const getBestRatedApis = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.getBestRatedApis}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getBestRatedApis}`
   );
 
   return response.data.data;
@@ -19,7 +19,7 @@ export const getBestRatedApis = async () => {
 
 export const getRandomApi = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.getRandomApi}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getRandomApi}`
   );
 
   return response.data.data;
@@ -27,7 +27,7 @@ export const getRandomApi = async () => {
 
 export const addNewApi = async (data) => {
   const response = await axios.post(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.createApi}`,
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.createApi}`,
     data
   );
 
@@ -38,7 +38,15 @@ export const searchApis = async (q, searchBy) => {
   const { Name, Category, UploadBy } = searchBy;
 
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.searchApi}/?q=${q}&name=${Name}&category=${Category}&uploadby=${UploadBy}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.searchApi}/?q=${q}&name=${Name}&category=${Category}&uploadby=${UploadBy}`
+  );
+
+  return response.data.data;
+};
+
+export const getAllCategories = async () => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.getAllCategories}`
   );
 
   return response.data.data;

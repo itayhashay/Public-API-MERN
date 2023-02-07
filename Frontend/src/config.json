@@ -1,18 +1,20 @@
 {
   "serverConfig": {
-    "baseUrl": "http://localhost:8080/api",
+    "baseUrl": "http://localhost:8080",
     "routes": {
-      "getAllApis": "/",
-      "getLatestApis": "/latest",
-      "getBestRatedApis": "/bestrated",
-      "getRandomApi": "/random",
-      "searchApi": "/search",
-      "getApiById": "/",
-      "getTotalUpvotes": "/upvotes/count",
-      "getTotalApis": "/count",
-      "createApi": "/",
-      "upvoteApi": "/upvote",
-      "updateApi": "/",
+      "api": {
+        "getAllApis": "/api/",
+        "getLatestApis": "/api/latest",
+        "getBestRatedApis": "/api/bestrated",
+        "getRandomApi": "/api/random",
+        "searchApi": "/api/search",
+        "getApiById": "/api/",
+        "getTotalUpvotes": "/api/upvotes/count",
+        "getTotalApis": "/api/count",
+        "createApi": "/api/",
+        "upvoteApi": "/api/upvote",
+        "updateApi": "/api/"
+      },
       "category": {
         "getAllCategories": "/category",
         "getAmountsOfApis": "/category/apis/count",
