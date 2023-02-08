@@ -14,6 +14,22 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/total-upvotes', async (req, res) => {
+  try {
+    const total = await Api.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalUpvotes: { $sum: '$upvotes' }
+        }
+      }
+    ])
+    res.status(StatusCodes.OK).send({ data: total[0].totalUpvotes });
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err.message } });
+  }
+})
+
 router.get('/latest', async (req, res) => {
   try {
     const apis = await Api.find({}).populate('uploadBy').populate('category').sort([['date', -1]]).exec();
