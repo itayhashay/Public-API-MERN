@@ -59,3 +59,20 @@ export const getAllBookmarks = async () => {
 
   return response.data.data;
 };
+
+export const getUserById = async (userId) => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getById}/${userId}`
+  );
+
+  return response.data.data;
+};
+
+export const editUser = async (userId, data) => {
+  const response = await axios.put(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.editUser}/${userId}`,
+    data
+  );
+
+  return response.data.data;
+};

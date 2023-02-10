@@ -15,10 +15,9 @@ import {
   FieldName,
 } from "./styles";
 import { addNewApi, getAllCategories } from "../../utils/api";
-import { toasterMessage } from "../../utils/toasterMessage";
 import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
-import { redirectToPath } from "../../utils/browser";
+import { toasterAndRedirect } from "../../utils/logic";
 
 const AddApi = () => {
   const [categoriesList, setCategoriesList] = useState([]);
@@ -46,10 +45,12 @@ const AddApi = () => {
 
     await addNewApi(data);
 
-    redirectToPath(RoutesUrls.LATEST_APIS);
-    toasterMessage(
-      toasterTypes.SUCCESS,
-      `Api ${data.name} Created successfuly!`
+    toasterAndRedirect(
+      {
+        toasterType: toasterTypes.SUCCESS,
+        message: `Api ${data.name} Created successfuly!`,
+      },
+      RoutesUrls.LATEST_APIS
     );
   };
 

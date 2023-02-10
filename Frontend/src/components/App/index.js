@@ -4,6 +4,7 @@ import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
 import GenericApiList from "../GenericApiList";
 import AddApi from "../AddApi";
+import Profile from "../Profile";
 import RoutesUrls from "../../utils/constants/routes";
 import * as APIS_FLAGS from "../../utils/constants/apiListFlags";
 
@@ -43,6 +44,11 @@ const App = () => {
               exact
               path={`/${RoutesUrls.ADD_API}`}
               element={<AddApi />}
+            ></Route>
+            <Route
+              exact
+              path={`/${RoutesUrls.PROFILE}`}
+              element={<Profile />}
             ></Route>
           </Routes>
         </TabContent>

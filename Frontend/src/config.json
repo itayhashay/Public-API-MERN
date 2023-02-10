@@ -34,7 +34,7 @@
         "getAllUsers": "/user/",
         "apiAmountPerUser": "/user/api-per-user",
         "searchUser": "/user/",
-        "getById": "/user/",
+        "getById": "/user",
         "createUser": "/user/",
         "editUser": "/user/",
         "deleteUser": "/user/",
