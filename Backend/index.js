@@ -9,12 +9,33 @@ const express = require('express'),
     {StatusCodes} = require('http-status-codes'),
     port = 8080,
     swaggerJSDoc = require('swagger-jsdoc'),
-    swaggerUi = require('swagger-ui-express');
+    swaggerUi = require('swagger-ui-express'),
+    http = require('http');
+    
+    const server = http.createServer(app);
+    const { Server } = require("socket.io");
+    const io = new Server(server, {cors: {origin: "*"}})
 
 // CORS Handling    
 app.use(cors({
     origin: '*'
 }));
+
+// Socket bind
+let onlineUsers = 0;
+
+io.on("connection", (socket) => {
+    onlineUsers++;
+    console.log(onlineUsers);
+  socket.emit("updateUsers", onlineUsers);
+  socket.broadcast.emit("updateUsers", onlineUsers);
+
+  socket.on("disconnect", () => {
+    onlineUsers--;
+    socket.broadcast.emit("updateUsers", onlineUsers);
+  });
+});
+
 
 // Swagger Setup
 const swaggerDefinition = {
@@ -77,6 +98,7 @@ const authenticateToken = (req, res, next) => {
     }
   }
 
+
 // Import the Controllers
 const categoryRoute = require('./Controllers/category'),
     userRoute = require('./Controllers/user'),
@@ -102,6 +124,6 @@ app.use('/bookmark',authenticateToken, bookmarkRoute);
 app.use('/auth', authRoute);
 
 // Server Runner
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`listening on port ${port}!`);
 })
