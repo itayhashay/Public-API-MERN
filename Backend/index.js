@@ -6,7 +6,7 @@ const express = require('express'),
     app = express(),
     dotenv = require('dotenv').config(),
     jwt = require('jsonwebtoken'),
-    statusCode = require('http-status-codes').StatusCodes,
+    {StatusCodes} = require('http-status-codes'),
     port = 8080,
     swaggerJSDoc = require('swagger-jsdoc'),
     swaggerUi = require('swagger-ui-express');
@@ -58,25 +58,35 @@ app.use(bodyParser.json());
 
 // Auth Middleware
 const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return res.sendStatus(statusCode.UNAUTHORIZED)
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-        console.log(err);
-        if (err) return res.sendStatus(statusCode.FORBIDDEN);
-        req.user = user;
-        next();
-    });
+    try {
+        const authHeader = req.headers['authorization'];
+        if (authHeader == null) {
+            req.user = { userType: "CLIENT"};
+            return next();
+        }
+        const token = authHeader && authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        return next();
+    } catch (err) {
+        if (err.name == TokenExpiredError) {
+            return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'JWT Token Expired' });
+        } else {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: 'JWT Token Expired' });
+        }
+    }
   }
 
 // Import the Controllers
 const categoryRoute = require('./Controllers/category'),
     userRoute = require('./Controllers/user'),
     apiRoute = require('./Controllers/api'),
-    bookmarkRoute = require('./Controllers/bookmark');
+    bookmarkRoute = require('./Controllers/bookmark'),
+    authRoute = require('./Controllers/auth');
 
 
 // Connect mongo
+mongoose.set('strictQuery', true);
 mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true })
     .then(() => {
         console.log("mongo connection opened");
@@ -86,9 +96,10 @@ mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true })
 
 // Routes    
 app.use('/category',categoryRoute);
-app.use('/user',userRoute);
-app.use('/api',apiRoute);
-app.use('/bookmark', bookmarkRoute);  
+app.use('/user',authenticateToken,userRoute);
+app.use('/api',authenticateToken,apiRoute);
+app.use('/bookmark',authenticateToken, bookmarkRoute);  
+app.use('/auth', authRoute);
 
 // Server Runner
 app.listen(port, () => {

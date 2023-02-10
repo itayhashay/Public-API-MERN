@@ -2,8 +2,9 @@ const express = require('express'),
   { StatusCodes } = require('http-status-codes'),
   Api = require('../Models/api'),
   Bookmark = require('../Models/bookmark'),
-  Category = require('../Models/category')
-  router = express.Router();
+  Category = require('../Models/category'),
+  { isAdmin, isLoggedIn } = require("../Services/middleware"),
+router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.get('/total-upvotes', async (req, res) => {
+router.get('/total-upvotes', isAdmin, async (req, res) => {
   try {
     const total = await Api.aggregate([
       {
@@ -85,7 +86,7 @@ router.get('/search', async (req, res) => {
   }
 })
 
-router.get('/count', async (req, res) => {
+router.get('/count', isAdmin,async (req, res) => {
   try {
     const apis_count = await Api.countDocuments();
     res.status(StatusCodes.OK).send({ data: apis_count });
@@ -110,9 +111,9 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', isLoggedIn, async (req, res) => {
   try {
-    req.body.uploadBy = req.cookies.userId ? req.cookies.userId : "6373b5a91876e3d4dac2201f";
+    req.body.uploadBy = req.user.id ? req.user.id : "6373b5a91876e3d4dac2201f";
     const newApi = new Api(req.body);
     await newApi.save();
     const populatedApi = await Api.findById(newApi._id).populate('uploadBy').populate('category');
@@ -126,7 +127,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.post('/upvote/:id', async (req, res) => {
+router.post('/upvote/:id', isLoggedIn, async (req, res) => {
   try {
     const { id } = req.params;
     let api = await Api.findById(id);
@@ -140,7 +141,7 @@ router.post('/upvote/:id', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', isAdmin,async (req, res) => {
   try {
     const { id } = req.params;
     const api = await Api.findByIdAndUpdate(id, req.body, { new: true });
@@ -156,7 +157,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAdmin,async (req, res) => {
   try {
     const { id } = req.params;
     const api = await Api.findByIdAndDelete(id);
@@ -171,7 +172,7 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
-router.get('/upvotes/count', async (req, res) => {
+router.get('/upvotes/count', isAdmin, async (req, res) => {
   try {
     const sum_upvotes = await Api.aggregate([
       { $group: { _id: null, sum: { $sum: "$upvotes" } } }

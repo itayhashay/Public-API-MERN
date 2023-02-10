@@ -2,6 +2,7 @@ const express = require('express'),
   Category = require('../Models/category'),
   Api = require('../Models/api'),
   Bookmark = require('../Models/bookmark'),
+  { isAdmin, isLoggedIn } = require("../Services/middleware"),
   { StatusCodes } = require('http-status-codes'),
   router = express.Router();
   
@@ -39,7 +40,7 @@ router.get('/', async (req, res) => {
 *        description: Internal server error
 *
 */
-router.get('/apis/count', async (req, res) => {
+router.get('/apis/count', isAdmin, async (req, res) => {
   try {
     const categories = await Api.aggregate([
       {
@@ -77,17 +78,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// router.get('/search', async (req, res) => {
-//   try {
-//     let { query } = req;
-//     const category = await Category.find({ name: query });
-//     res.status(StatusCodes.OK).send({ data: category });
-//   } catch (err) {
-//     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err } });
-//   }
-// })
-
-router.post('/', async (req, res) => {
+router.post('/', isAdmin, async (req, res) => {
   try {
     const newCategory = new Category(req.body);
     await newCategory.save();
@@ -97,7 +88,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const category = await Category.findByIdAndUpdate(id, req.body, { new: true });
@@ -108,7 +99,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const category = await Category.findByIdAndDelete(id);
