@@ -10,6 +10,7 @@ import {
 } from "../../utils/api";
 import ApiCard from "../ApiCard";
 import { useLocation } from "react-router-dom";
+import Spinner from "../Spinner";
 
 const useQuery = () => {
   const { search } = useLocation();
@@ -19,6 +20,7 @@ const useQuery = () => {
 
 const GenericApiList = ({ flag }) => {
   const [apis, setApis] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   let query = useQuery();
 
@@ -46,9 +48,7 @@ const GenericApiList = ({ flag }) => {
             Category: query.get("category"),
             UploadBy: query.get("uploadby"),
           });
-
           break;
-
         default:
           break;
       }
@@ -58,19 +58,26 @@ const GenericApiList = ({ flag }) => {
 
     fetchApis(flag).then((data) => {
       setApis(data);
+      setIsLoading(false);
     });
   }, [flag, query]);
 
   return (
-    <Container>
-      {apis.map((api) => {
-        return (
-          <div key={api._id}>
-            <ApiCard apiData={api} />
-          </div>
-        );
-      })}
-    </Container>
+    <>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Container className="apis-container">
+          {apis.map((api) => {
+            return (
+              <div key={api._id}>
+                <ApiCard apiData={api} />
+              </div>
+            );
+          })}
+        </Container>
+      )}
+    </>
   );
 };
 
