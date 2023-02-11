@@ -24,8 +24,8 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate JWT
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-    const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET);
+    const token = jwt.sign({ id: user._id, userType: user.userType, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ id: user._id, userType: user.userType, username: user.username  }, REFRESH_SECRET);
 
     res.status(StatusCodes.OK).send({ token, refreshToken });
   } catch (err) {
@@ -57,6 +57,22 @@ router.post('/refresh', async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: 'An error occured while refreshing the token' });
   }
 });
+
+
+// To use in servicenpm install firebase
+// router.post('/login', async (req, res) => {
+//   try {
+//     const { token, refreshToken } = await authService.login(req.body);
+//     res.status(StatusCodes.OK).send({ token, refreshToken });
+//   } catch (err) {
+//     if (err.message === 'UNAUTHORIZED') {
+//       return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'Username or password is incorrect' });
+//     } else if (err.message === 'INVALID_REQUEST') {
+//       return res.status(StatusCodes.BAD_REQUEST).send({ error: 'Missing required fields in the request' });
+//     }
+//     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: 'An error occured while logging in' });
+//   }
+// });
 
 router.post('/signup', async (req, res) => {
     try {
