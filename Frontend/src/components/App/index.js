@@ -5,6 +5,8 @@ import Navbar from "../Navbar";
 import GenericApiList from "../GenericApiList";
 import AddApi from "../AddApi";
 import Profile from "../Profile";
+import Dashboard from "../Dashboard";
+
 import RoutesUrls from "../../utils/constants/routes";
 import * as APIS_FLAGS from "../../utils/constants/apiListFlags";
 
@@ -16,6 +18,10 @@ const App = () => {
         <Sidebar />
         <TabContent>
           <Routes>
+            <Route
+              path={`/${RoutesUrls.DASHBOARD}`}
+              element={<Dashboard />}
+            ></Route>
             <Route
               path={`/${RoutesUrls.SEARCH_RESULTS}`}
               element={<GenericApiList flag={APIS_FLAGS.SEARCH_RESULTS} />}

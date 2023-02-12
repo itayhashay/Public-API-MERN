@@ -76,3 +76,27 @@ export const editUser = async (userId, data) => {
 
   return response.data.data;
 };
+
+export const getAllUsers = async () => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getAllUsers}`
+  );
+
+  return response.data.data;
+};
+
+export const getTotalUpvotes = async () => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getTotalUpvotes}`
+  );
+
+  return response.data.data;
+};
+
+export const getAllApis = async () => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getAllApis}`
+  );
+
+  return response.data.data;
+};
