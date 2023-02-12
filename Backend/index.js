@@ -6,12 +6,13 @@ const express = require('express'),
     app = express(),
     dotenv = require('dotenv').config(),
     jwt = require('jsonwebtoken'),
-    {StatusCodes} = require('http-status-codes'),
+    { StatusCodes } = require('http-status-codes'),
     port = 8080,
     swaggerJSDoc = require('swagger-jsdoc'),
     swaggerUi = require('swagger-ui-express'),
-    http = require('http');
-    
+    http = require('http'),
+    { scrapeData } = require('./Services/scrapper');
+
     const server = http.createServer(app);
     const { Server } = require("socket.io");
     const io = new Server(server, {cors: {origin: "*"}})
@@ -35,7 +36,6 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("updateUsers", onlineUsers);
   });
 });
-
 
 // Swagger Setup
 const swaggerDefinition = {
@@ -98,13 +98,13 @@ const authenticateToken = (req, res, next) => {
     }
   }
 
-
 // Import the Controllers
 const categoryRoute = require('./Controllers/category'),
     userRoute = require('./Controllers/user'),
     apiRoute = require('./Controllers/api'),
     bookmarkRoute = require('./Controllers/bookmark'),
     authRoute = require('./Controllers/auth');
+    
 
 
 // Connect mongo
@@ -117,11 +117,16 @@ mongoose.connect(process.env.DB_CONNECTION_STRING, { useNewUrlParser: true })
     })
 
 // Routes    
-app.use('/category',categoryRoute);
+app.use('/category', authenticateToken,categoryRoute);
 app.use('/user',authenticateToken,userRoute);
 app.use('/api',authenticateToken,apiRoute);
 app.use('/bookmark',authenticateToken, bookmarkRoute);  
 app.use('/auth', authRoute);
+app.get('/scrap', async (req, res) => {
+    let a = await scrapeData();
+    
+    res.send({ data: a });
+});
 
 // Server Runner
 server.listen(port, () => {

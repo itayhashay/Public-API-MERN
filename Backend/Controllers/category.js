@@ -44,8 +44,19 @@ router.get('/apis/count', isAdmin, async (req, res) => {
   try {
     const categories = await Api.aggregate([
       {
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      {
+        $unwind: '$category'
+      },
+      {
         $group: {
-          _id: '$category',
+          _id: '$category.name',
           count: { $sum: 1 } // this means that the count will increment by 1
         }
       }

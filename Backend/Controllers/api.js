@@ -1,6 +1,7 @@
 const express = require('express'),
   { StatusCodes } = require('http-status-codes'),
   Api = require('../Models/api'),
+  User = require('../Models/user'),
   Bookmark = require('../Models/bookmark'),
   Category = require('../Models/category'),
   { isAdmin, isLoggedIn } = require("../Services/middleware"),
@@ -67,7 +68,7 @@ router.get('/search', async (req, res) => {
       query = [...query, { name: { $regex: q, $options: 'i' } }]
     }
     if (uploadby == 'true') {
-      let users = await User.find({ "name": { $regex: q, $options: 'i' } });
+      let users = await User.find({ name: { $regex: q, $options: 'i' } });
       let userIds = users.map(user => user._id);
       query = [...query, { "uploadBy": { $in: userIds } }]
     }
@@ -127,6 +128,7 @@ router.post('/', isLoggedIn, async (req, res) => {
   }
 })
 
+// TODO: ADD ERROR HANDLE WHEN API DOESNT EXIST
 router.post('/upvote/:id', isLoggedIn, async (req, res) => {
   try {
     const { id } = req.params;

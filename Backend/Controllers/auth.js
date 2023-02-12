@@ -1,9 +1,11 @@
 const express = require('express'),
-    hash = require('object-hash'),
-    jwt = require('jsonwebtoken'),
-    { StatusCodes } = require('http-status-codes'),
-    User = require('../Models/user'),
-    { JWT_SECRET, REFRESH_SECRET } = process.env;
+  hash = require('object-hash'),
+  jwt = require('jsonwebtoken'),
+  { StatusCodes } = require('http-status-codes'),
+  User = require('../Models/user'),
+  { JWT_SECRET, REFRESH_SECRET } = process.env; 
+  
+const firebaseService = require('../Services/firebase');  
 
 const router = express.Router();
 
@@ -17,9 +19,8 @@ router.post('/login', async (req, res) => {
     }
 
     // Check if the password is correct
-    
-      const isPasswordMatch = hash(req.body.password) == user.password;
-    if (!isPasswordMatch) {
+    const isLoggedIn = await firebaseService.login(req.body.username, req.body.password); 
+    if (!isLoggedIn) {
       return res.status(StatusCodes.UNAUTHORIZED).send({ error: 'Username or password is incorrect' });
     }
 
@@ -77,27 +78,25 @@ router.post('/refresh', async (req, res) => {
 router.post('/signup', async (req, res) => {
     try {
       const { username, firstName, lastName, gender, birthday, email, password } = req.body;
-  
       const existingUser = await User.findOne({ username });
       if (existingUser) {
         return res.status(StatusCodes.BAD_REQUEST).send({
           error: 'Username already in use'
         });
       }
-  
-        const hashedPassword = hash(password);;
-  
-        const user = new User({
-            username,
-            firstName,
-            lastName,
-            gender,
-            birthday: Date.parse(birthday),
-            email,
-            password: hashedPassword,
-            userType: "CLIENT"
-        });
-  
+      const isRegisterdOnFirebase = await firebaseService.register(username, password);
+      if (!isRegisterdOnFirebase) {
+        throw new Error("Firebase - register faild");
+      }
+      const user = new User({
+        username,
+        firstName,
+        lastName,
+        gender,
+        birthday: Date.parse(birthday),
+        email,
+        userType: "CLIENT"
+      });
       await user.save();
   
       const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
