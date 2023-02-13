@@ -100,3 +100,52 @@ export const getAllApis = async () => {
 
   return response.data.data;
 };
+
+export const getCategoryById = async (id) => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.getById}/${id}`
+  );
+
+  return response.data.data;
+};
+
+export const addNewCategory = async (data) => {
+  const response = await axios.post(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.createCategory}`,
+    data
+  );
+
+  return response.data.data;
+};
+
+export const editCategory = async (id, data) => {
+  const response = await axios.put(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.updateCategory}/${id}`,
+    data
+  );
+
+  return response.data.data;
+};
+
+export const deleteCategory = async (id) => {
+  const response = await axios.delete(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.deleteCategory}/${id}`
+  );
+
+  return response.data.data;
+};
+
+export const deleteUser = async (id) => {
+  const response = await axios.delete(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.deleteUser}/${id}`
+  );
+
+  return response.data.data;
+};
+export const deleteApi = async (id) => {
+  const response = await axios.delete(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.deleteApi}/${id}`
+  );
+
+  return response.data.data;
+};

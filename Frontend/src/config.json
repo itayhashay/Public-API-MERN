@@ -13,15 +13,16 @@
         "getTotalApis": "/api/count",
         "createApi": "/api/",
         "upvoteApi": "/api/upvote",
-        "updateApi": "/api/"
+        "updateApi": "/api",
+        "deleteApi": "/api"
       },
       "category": {
         "getAllCategories": "/category",
         "getAmountsOfApis": "/category/apis/count",
-        "getById": "/category/",
-        "createCategory:": "/category/",
-        "updateCategory:": "/category/",
-        "deleteCategory:": "/category/"
+        "getById": "/category",
+        "createCategory": "/category",
+        "updateCategory": "/category",
+        "deleteCategory": "/category"
       },
       "bookmark": {
         "getAllBookmark": "/bookmark/",

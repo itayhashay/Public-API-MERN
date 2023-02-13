@@ -6,9 +6,12 @@ import GenericApiList from "../GenericApiList";
 import AddApi from "../AddApi";
 import Profile from "../Profile";
 import Dashboard from "../Dashboard";
+import Management from "../Management";
+import CategoryForm from "../CategoryForm";
 
 import RoutesUrls from "../../utils/constants/routes";
-import * as APIS_FLAGS from "../../utils/constants/apiListFlags";
+import * as APIS_FLAGS from "../../utils/flags/apiListFlags";
+import * as MANAGEMENT_FLAGS from "../../utils/flags/managementFlags";
 
 const App = () => {
   return (
@@ -21,6 +24,24 @@ const App = () => {
             <Route
               path={`/${RoutesUrls.DASHBOARD}`}
               element={<Dashboard />}
+            ></Route>
+            <Route
+              path={`/${RoutesUrls.MANAGE_APIS}`}
+              element={
+                <Management flagData={MANAGEMENT_FLAGS.APIS_MANAGEMENT} />
+              }
+            ></Route>
+            <Route
+              path={`/${RoutesUrls.MANAGE_USERS}`}
+              element={
+                <Management flagData={MANAGEMENT_FLAGS.USERS_MANAGEMENT} />
+              }
+            ></Route>
+            <Route
+              path={`/${RoutesUrls.MANAGE_CATEGORIES}`}
+              element={
+                <Management flagData={MANAGEMENT_FLAGS.CATEGORIES_MANAGEMENT} />
+              }
             ></Route>
             <Route
               path={`/${RoutesUrls.SEARCH_RESULTS}`}
@@ -55,6 +76,10 @@ const App = () => {
               exact
               path={`/${RoutesUrls.PROFILE}`}
               element={<Profile />}
+            ></Route>
+            <Route
+              path={`/${RoutesUrls.CATEGORY_FORM}/:id?`}
+              element={<CategoryForm />}
             ></Route>
           </Routes>
         </TabContent>

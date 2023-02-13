@@ -11,6 +11,7 @@ const RoutesUrls = {
   ADD_API: "add-api",
   PROFILE: "profile",
   LOGOUT: "logout",
+  CATEGORY_FORM: "category",
 };
 
 export default RoutesUrls;

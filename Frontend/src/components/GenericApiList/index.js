@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Container } from "./styles";
-import * as APIS_FLAGS from "../../utils/constants/apiListFlags";
+import * as APIS_FLAGS from "../../utils/flags/apiListFlags";
 import {
   getBestRatedApis,
   getLatestApis,

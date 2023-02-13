@@ -20,5 +20,5 @@ export const setSearchStorgeData = (searchValue, searchBy) => {
 };
 
 export const redirectToPath = (pathname) => {
-  window.location.href = pathname;
+  window.location.href = `${window.location.origin}/${pathname}`;
 };
