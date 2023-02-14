@@ -41,7 +41,7 @@ export const MenuItems = [
   {
     id: 5,
     displayName: "Add API",
-    urlName: RoutesUrls.ADD_API,
+    urlName: RoutesUrls.API_FORM,
     icon: <AddIcon />,
   },
 ];
@@ -50,7 +50,7 @@ export const UserMenuActions = [
   {
     id: 1,
     displayName: "Profile",
-    urlName: RoutesUrls.PROFILE,
+    urlName: `${RoutesUrls.USER_FORM}/profile`,
     icon: <AccountCircleIcon />,
   },
   {

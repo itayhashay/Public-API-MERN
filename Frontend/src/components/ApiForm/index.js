@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,21 +15,50 @@ import {
   FieldsContainer,
   FieldName,
 } from "./styles";
-import { addNewApi, getAllCategories } from "../../utils/api";
+import { addNewApi, getApiById, getAllCategories } from "../../utils/api";
 import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import { toasterAndRedirect } from "../../utils/logic";
+import * as FORM_FLAGS from "../../utils/flags/formFlags";
 
-const AddApi = () => {
+const ApiForm = () => {
   const [categoriesList, setCategoriesList] = useState([]);
   const [category, setCategory] = useState("");
+  const [flag, setFlag] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiData, setApiData] = useState({});
   const apiNameRef = useRef(null);
   const apiDescRef = useRef(null);
   const apiUrlRef = useRef(null);
+  const params = useParams();
 
   useEffect(() => {
+    const fetchApiData = async (id) => {
+      const apiData = await getApiById(id);
+      return apiData;
+    };
+    const apiId = params.id;
+
+    if (apiId) {
+      setFlag(FORM_FLAGS.EDIT);
+      fetchApiData(apiId).then((data) => {
+        setApiData(data);
+        setInputValues(data);
+      });
+    } else {
+      setFlag(FORM_FLAGS.ADD);
+    }
+    setIsLoading(false);
+
     getAllCategories().then((categories) => setCategoriesList(categories));
   }, []);
+
+  const setInputValues = (apiData) => {
+    apiNameRef.current.value = apiData.name || "";
+    apiDescRef.current.value = apiData.description || "";
+    apiUrlRef.current.value = apiData.url || "";
+    setCategory(apiData.category.name || "");
+  };
 
   const handleChange = (event) => {
     setCategory(event.target.value);
@@ -57,7 +87,7 @@ const AddApi = () => {
   return (
     <Container>
       <FormContainer>
-        <TitleText>Add New Api</TitleText>
+        <TitleText>{flag} Api</TitleText>
         <FieldsContainer>
           <FieldContainer>
             <FieldName>Api Name: </FieldName>
@@ -128,4 +158,4 @@ const AddApi = () => {
   );
 };
 
-export default AddApi;
+export default ApiForm;

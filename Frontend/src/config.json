@@ -8,7 +8,7 @@
         "getBestRatedApis": "/api/bestrated",
         "getRandomApi": "/api/random",
         "searchApi": "/api/search",
-        "getApiById": "/api/",
+        "getApiById": "/api",
         "getTotalUpvotes": "/api/upvotes/count",
         "getTotalApis": "/api/count",
         "createApi": "/api/",

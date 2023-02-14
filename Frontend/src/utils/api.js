@@ -68,6 +68,14 @@ export const getUserById = async (userId) => {
   return response.data.data;
 };
 
+export const getApiById = async (apiId) => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getApiById}/${apiId}`
+  );
+
+  return response.data.data;
+};
+
 export const editUser = async (userId, data) => {
   const response = await axios.put(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.editUser}/${userId}`,

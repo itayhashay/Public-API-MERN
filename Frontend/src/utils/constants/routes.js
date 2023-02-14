@@ -8,8 +8,8 @@ const RoutesUrls = {
   RANDOM_API: "random-api",
   BOOKMARKS: "bookmarks",
   SEARCH_RESULTS: "search",
-  ADD_API: "add-api",
-  PROFILE: "profile",
+  API_FORM: "api",
+  USER_FORM: "user",
   LOGOUT: "logout",
   CATEGORY_FORM: "category",
 };

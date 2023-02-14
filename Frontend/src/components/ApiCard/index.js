@@ -42,7 +42,7 @@ const ApiCard = ({ apiData }) => {
       <CardMedia
         component="img"
         height="194"
-        image={apiImg}
+        image={apiData.img}
         alt="Paella dish"
       />
       <CardContent>

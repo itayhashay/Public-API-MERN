@@ -3,8 +3,8 @@ import { Container, ContentSection, TabContent } from "./styles";
 import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
 import GenericApiList from "../GenericApiList";
-import AddApi from "../AddApi";
-import Profile from "../Profile";
+import ApiForm from "../ApiForm";
+import UserForm from "../UserForm";
 import Dashboard from "../Dashboard";
 import Management from "../Management";
 import CategoryForm from "../CategoryForm";
@@ -69,17 +69,17 @@ const App = () => {
             ></Route>
             <Route
               exact
-              path={`/${RoutesUrls.ADD_API}`}
-              element={<AddApi />}
-            ></Route>
-            <Route
-              exact
-              path={`/${RoutesUrls.PROFILE}`}
-              element={<Profile />}
+              path={`/${RoutesUrls.API_FORM}/:id?`}
+              element={<ApiForm />}
             ></Route>
             <Route
               path={`/${RoutesUrls.CATEGORY_FORM}/:id?`}
               element={<CategoryForm />}
+            ></Route>
+            <Route
+              exact
+              path={`/${RoutesUrls.USER_FORM}/:id?`}
+              element={<UserForm />}
             ></Route>
           </Routes>
         </TabContent>

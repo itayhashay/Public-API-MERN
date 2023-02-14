@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -26,21 +27,50 @@ import Spinner from "../Spinner";
 import Genders from "../../utils/constants/genders";
 import { toasterAndRedirect } from "../../utils/logic";
 import DialogModal from "../DialogModal";
+import * as FORM_FLAGS from "../../utils/flags/formFlags";
 
-const Profile = () => {
+const UserForm = () => {
   const [userBaseInfo, setUserBaseInfo] = useState({});
-  const [userNewInfo, setUserNewInfo] = useState({});
+  const [userNewInfo, setUserNewInfo] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    birthday: null,
+    gender: "",
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [flag, setFlag] = useState("");
+  const params = useParams();
 
   useEffect(() => {
-    getUserById("6373b5a91876e3d4dac2201f").then((user) => {
-      setUserBaseInfo(user);
-      setUserNewInfo(user);
-      setIsLoading(false);
-    });
-  }, []);
+    const fetchUserData = async (id) => {
+      const userData = await getUserById(id);
+      return userData;
+    };
+    const userId = params.id;
+
+    if (userId === "profile") {
+      setFlag(FORM_FLAGS.PROFILE);
+      fetchUserData("63e9512605360c2670eb7a89").then(
+        // TODO: Change to connected userID
+        (data) => setUserFirstData(data)
+      );
+    } else if (userId) {
+      setFlag(FORM_FLAGS.EDIT);
+      fetchUserData(userId).then((data) => setUserFirstData(data));
+    } else {
+      setFlag(FORM_FLAGS.ADD);
+    }
+    setIsLoading(false);
+  }, [params]);
+
+  const setUserFirstData = (userData) => {
+    setUserBaseInfo(userData);
+    setUserNewInfo(userData);
+  };
 
   const handleChangeBirthday = (newValue) => {
     setUserNewInfo({
@@ -67,7 +97,7 @@ const Profile = () => {
     );
   };
 
-  const toggleEditMode = (event) => {
+  const toggleEditMode = () => {
     if (isEditMode) {
       const isChange = isDataChanged();
       if (isChange) {
@@ -114,34 +144,41 @@ const Profile = () => {
     }
   };
 
+  const isUserProfile = flag === FORM_FLAGS.PROFILE;
+
   return (
     <Container>
       <FormContainer
-        className={`profile-form ${isEditMode ? `edit-mode` : ""}`}
-        isEditMode={isEditMode}
+        className={`profile-form ${
+          isEditMode || !isUserProfile ? `edit-mode` : ""
+        }`}
       >
         {isLoading ? (
           <Spinner />
         ) : (
           <>
-            <TitleText>User Profile</TitleText>
-            <FormControlLabel
-              value="end"
-              control={
-                <Switch
-                  color="primary"
-                  checked={isEditMode}
-                  onChange={toggleEditMode}
-                />
-              }
-              label="Edit Mode"
-              labelPlacement="start"
-              sx={{ position: "absolute", top: "30px", right: "30px" }}
-            />
+            <TitleText>
+              {isUserProfile ? "User Profile" : `${flag} User`}
+            </TitleText>
+            {isUserProfile && (
+              <FormControlLabel
+                value="end"
+                control={
+                  <Switch
+                    color="primary"
+                    checked={isEditMode}
+                    onChange={toggleEditMode}
+                  />
+                }
+                label="Edit Mode"
+                labelPlacement="start"
+                sx={{ position: "absolute", top: "30px", right: "30px" }}
+              />
+            )}
             <FieldsContainer>
               <FieldContainer>
                 <TextField
-                  disabled={!isEditMode}
+                  disabled={isUserProfile && !isEditMode}
                   value={userNewInfo.firstName}
                   variant="standard"
                   label="First Name"
@@ -151,7 +188,7 @@ const Profile = () => {
               </FieldContainer>
               <FieldContainer>
                 <TextField
-                  disabled={!isEditMode}
+                  disabled={isUserProfile && !isEditMode}
                   value={userNewInfo.lastName}
                   variant="standard"
                   label="Last Name"
@@ -161,7 +198,7 @@ const Profile = () => {
               </FieldContainer>
               <FieldContainer>
                 <TextField
-                  disabled={!isEditMode}
+                  disabled={isUserProfile && !isEditMode}
                   value={userNewInfo.username}
                   variant="standard"
                   label="User Name"
@@ -171,7 +208,7 @@ const Profile = () => {
               </FieldContainer>
               <FieldContainer>
                 <TextField
-                  disabled={!isEditMode}
+                  disabled={isUserProfile && !isEditMode}
                   value={userNewInfo.email}
                   variant="standard"
                   label="Email"
@@ -185,7 +222,7 @@ const Profile = () => {
                     label="Birthday"
                     inputFormat="MM/DD/YYYY"
                     value={userNewInfo.birthday}
-                    disabled={!isEditMode}
+                    disabled={isUserProfile && !isEditMode}
                     onChange={handleChangeBirthday}
                     renderInput={(params) => (
                       <TextField variant="standard" {...params} />
@@ -197,7 +234,7 @@ const Profile = () => {
                 <FormControl
                   className="gender-select-fc"
                   variant="standard"
-                  disabled={!isEditMode}
+                  disabled={isUserProfile && !isEditMode}
                 >
                   <InputLabel>Gender</InputLabel>
                   <Select
@@ -212,19 +249,29 @@ const Profile = () => {
                   </Select>
                 </FormControl>
               </FieldContainer>
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{
-                  visibility: isEditMode ? "visiable" : "hidden",
-                  marginTop: "10px",
-                }}
-              >
-                <Button onClick={onCancel}>Cancel</Button>
-                <Button variant="contained" onClick={onSubmit}>
-                  Save
+              {isUserProfile ? (
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{
+                    visibility: isEditMode ? "visiable" : "hidden",
+                    marginTop: "10px",
+                  }}
+                >
+                  <Button onClick={onCancel}>Cancel</Button>
+                  <Button variant="contained" onClick={onSubmit}>
+                    Save
+                  </Button>
+                </Stack>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={onSubmit}
+                  sx={{ marginTop: "10px" }}
+                >
+                  {flag}
                 </Button>
-              </Stack>
+              )}
             </FieldsContainer>
           </>
         )}
@@ -240,4 +287,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserForm;

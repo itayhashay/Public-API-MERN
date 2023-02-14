@@ -1,17 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Switch from "@mui/material/Switch";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   Container,
   FormContainer,
@@ -20,13 +10,10 @@ import {
   FieldsContainer,
 } from "./styles";
 import { getCategoryById, addNewCategory, editCategory } from "../../utils/api";
-import { toasterMessage } from "../../utils/toasterMessage";
 import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import Spinner from "../Spinner";
-import Genders from "../../utils/constants/genders";
 import { toasterAndRedirect } from "../../utils/logic";
-import DialogModal from "../DialogModal";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
 
 const CategoryForm = () => {

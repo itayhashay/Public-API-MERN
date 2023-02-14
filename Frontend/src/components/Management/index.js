@@ -61,9 +61,9 @@ const Management = ({ flagData }) => {
   const [data, setData] = useState([]);
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUsers, setIsUsers] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  const [deleteFunc, setDeleteFunc] = useState(() => () => {});
   const [refreshRoute, setRefreshRoute] = useState("");
 
   useEffect(() => {
@@ -79,6 +79,7 @@ const Management = ({ flagData }) => {
           data = await getAllUsers();
           setProperties(PROPS.USERS_PROPS);
           setRefreshRoute(RoutesUrls.MANAGE_USERS);
+          setIsUsers(true);
           break;
         case MANAGEMENT_FLAGS.CATEGORIES_MANAGEMENT.flag:
           data = await getAllCategories();
@@ -194,7 +195,10 @@ const Management = ({ flagData }) => {
                       aria-label="delete"
                       color="error"
                       onClick={() =>
-                        handleDeleteButton(dataObj._id, dataObj.name)
+                        handleDeleteButton(
+                          dataObj._id,
+                          isUsers ? dataObj.username : dataObj.name
+                        )
                       }
                     >
                       <DeleteIcon />
