@@ -133,13 +133,20 @@ router.post('/upvote/:id', isLoggedIn, async (req, res) => {
   try {
     const { id } = req.params;
     let api = await Api.findById(id);
+    if (!api) {
+      throw new Error({ message: "Api Doesn't Exist"});
+    }
     api.upvotes++;
     api = await Api.findByIdAndUpdate(id, api, { new: true });
     await api.save();
     const populatedApi = await Api.findById(id).populate('uploadBy').populate('category');
     res.status(StatusCodes.OK).send({ data: populatedApi })
-  }  catch (err) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err.message } });
+  } catch (err) {
+    if (err.message === "Api Doesn't Exist") {
+      res.status(StatusCodes.BAD_REQUEST).send({ data: { Error: err.message } });
+    }
+    else
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err.message } });
   }
 })
 
