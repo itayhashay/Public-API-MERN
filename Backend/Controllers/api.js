@@ -100,7 +100,7 @@ router.get('/count', isAdmin,async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const api = await Api.findById(id);
+    const api = await Api.findById(id).populate("category").populate("uploadBy");
     res.status(StatusCodes.OK).send({ data: api == null ? [] : api })
   } catch (err) {
     if (["CastError", "ValidationError"].includes(err.name)) {
