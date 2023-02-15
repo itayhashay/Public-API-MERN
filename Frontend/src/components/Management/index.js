@@ -36,6 +36,7 @@ import { redirectToPath } from "../../utils/browser";
 import DialogModal from "../DialogModal";
 import RoutesUrls from "../../utils/constants/routes";
 import { toasterTypes } from "../../utils/constants/toaster";
+import Spinner from "../Spinner";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -95,7 +96,9 @@ const Management = ({ flagData }) => {
 
     fetchData(flagData.flag).then((data) => {
       setData(data);
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     });
   }, [flagData]);
 
@@ -152,64 +155,68 @@ const Management = ({ flagData }) => {
           Add New {flagData.Singular}
         </Button>
       </TitleContainer>
-      <TableContainer component={Paper} sx={TableStyles}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              {properties.map((prop, index) => {
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <TableContainer component={Paper} sx={TableStyles}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                {properties.map((prop, index) => {
+                  return (
+                    <StyledTableCell
+                      key={index}
+                      align="left"
+                      sx={TableHeadStyles}
+                    >
+                      {prop.displayName}
+                    </StyledTableCell>
+                  );
+                })}
+                <StyledTableCell align="left" sx={TableHeadStyles}>
+                  Actions
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((dataObj, dataIndex) => {
                 return (
-                  <StyledTableCell
-                    key={index}
-                    align="left"
-                    sx={TableHeadStyles}
-                  >
-                    {prop.displayName}
-                  </StyledTableCell>
+                  <StyledTableRow key={dataIndex}>
+                    {properties.map((prop, propIndex) => {
+                      return (
+                        <StyledTableCell key={propIndex} align="left">
+                          {getPropValue(dataObj, prop.path)}
+                        </StyledTableCell>
+                      );
+                    })}
+                    <StyledTableCell align="left" sx={{ minWidth: "120px" }}>
+                      <IconButton
+                        aria-label="edit"
+                        sx={{ color: "#FFC107" }}
+                        onClick={() => handleEditButton(dataObj._id)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() =>
+                          handleDeleteButton(
+                            dataObj._id,
+                            isUsers ? dataObj.username : dataObj.name
+                          )
+                        }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </StyledTableCell>
+                  </StyledTableRow>
                 );
               })}
-              <StyledTableCell align="left" sx={TableHeadStyles}>
-                Actions
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((dataObj, dataIndex) => {
-              return (
-                <StyledTableRow key={dataIndex}>
-                  {properties.map((prop, propIndex) => {
-                    return (
-                      <StyledTableCell key={propIndex} align="left">
-                        {getPropValue(dataObj, prop.path)}
-                      </StyledTableCell>
-                    );
-                  })}
-                  <StyledTableCell align="left">
-                    <IconButton
-                      aria-label="edit"
-                      sx={{ color: "#FFC107" }}
-                      onClick={() => handleEditButton(dataObj._id)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      color="error"
-                      onClick={() =>
-                        handleDeleteButton(
-                          dataObj._id,
-                          isUsers ? dataObj.username : dataObj.name
-                        )
-                      }
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </StyledTableCell>
-                </StyledTableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       <DialogModal
         isOpen={isModalOpen}
         title={`Delete ${flagData.Singular}`}

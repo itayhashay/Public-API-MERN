@@ -36,12 +36,12 @@ export const CountTitle = styled.h2`
 `;
 export const CountNumber = styled.span`
   margin: 0;
-  background: burlywood;
   border-radius: 50%;
+  display: flex;
   width: 45px;
   height: 45px;
   font-size: 30px;
-  text-align: center;
+  justify-content: center;
   font-weight: normal;
 `;
 
@@ -55,4 +55,5 @@ export const IconStyles = {
 export const CountIconStyles = {
   width: "40px",
   height: "40px",
+  display: "flex",
 };

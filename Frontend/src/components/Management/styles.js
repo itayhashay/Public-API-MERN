@@ -39,4 +39,5 @@ export const TableHeadStyles = {
   backgroundColor: "rgb(0 0 0 / 87%) !important",
   fontSize: "18px",
   fontWeight: "bold",
+  minWidth: "120px",
 };

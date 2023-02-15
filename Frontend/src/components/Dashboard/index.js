@@ -16,6 +16,7 @@ import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import CodeIcon from "@mui/icons-material/Code";
+import Skeleton from "@mui/material/Skeleton";
 import RadialChart from "../RadialChart";
 
 const Dashboard = () => {
@@ -24,6 +25,8 @@ const Dashboard = () => {
     usersCount: 0,
     totalUpvotes: 0,
   });
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getAnalyticsData = async () => {
@@ -40,6 +43,9 @@ const Dashboard = () => {
 
     getAnalyticsData().then((data) => {
       setAnalytics(data);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     });
   }, []);
 
@@ -77,7 +83,13 @@ const Dashboard = () => {
               >
                 {analyticsCount.icon}
                 <CountTitle>{analyticsCount.title}</CountTitle>
-                <CountNumber>{analyticsCount.count}</CountNumber>
+                {isLoading ? (
+                  <Skeleton variant="circular">
+                    <CountNumber></CountNumber>
+                  </Skeleton>
+                ) : (
+                  <CountNumber>{analyticsCount.count}</CountNumber>
+                )}
               </CountContainer>
             );
           })}

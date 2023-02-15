@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -12,13 +12,21 @@ import { amber } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { DividerLine, UpvotesCount } from "./styles";
+import { DividerLine, UpvotesCount, cardStyles } from "./styles";
 import Button from "@mui/material/Button";
 import { upvoteApi } from "../../utils/api";
 import * as COLORS from "../../utils/colors";
+import Skeleton from "@mui/material/Skeleton";
 
 const ApiCard = ({ apiData }) => {
   const [upvotesCount, setUpvotesCount] = useState(apiData.upvotes);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1200);
+  }, []);
 
   const handleUpvoteApi = async (apiId) => {
     const newApiData = await upvoteApi(apiId);
@@ -26,21 +34,7 @@ const ApiCard = ({ apiData }) => {
   };
 
   return (
-    <Card
-      sx={{
-        maxWidth: 345,
-        width: "16rem",
-        height: "30rem",
-        margin: "20px",
-        borderRadius: "8px",
-        boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
-        position: "relative",
-        "&:hover": {
-          borderColor: "dimgray",
-          boxShadow: "rgb(0 0 0 / 60%) 0px 5px 25px",
-        },
-      }}
-    >
+    <Card sx={cardStyles}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: amber[500] }} aria-label="recipe">
@@ -50,12 +44,21 @@ const ApiCard = ({ apiData }) => {
         title={apiData.name}
         subheader={dayjs(apiData.date).format("MMMM M, YYYY")}
       />
-      <CardMedia
-        component="img"
-        height="194"
-        image={apiData.img}
-        alt="Paella dish"
-      />
+      {isLoading ? (
+        <Skeleton
+          animation="wave"
+          variant="rectangular"
+          width={256}
+          height={194}
+        />
+      ) : (
+        <CardMedia
+          component="img"
+          height="194"
+          image={apiData.img}
+          alt="Paella dish"
+        />
+      )}
       <CardContent
         sx={{
           padding: "12px 16px",
