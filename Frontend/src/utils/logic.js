@@ -19,3 +19,5 @@ export const getPropValue = (propObj, path) => {
 
   return propValue;
 };
+
+export const getFirstLetterAvatar = () => {};

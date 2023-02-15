@@ -150,9 +150,18 @@ export const deleteUser = async (id) => {
 
   return response.data.data;
 };
+
 export const deleteApi = async (id) => {
   const response = await axios.delete(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.deleteApi}/${id}`
+  );
+
+  return response.data.data;
+};
+
+export const upvoteApi = async (id) => {
+  const response = await axios.post(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.upvoteApi}/${id}`
   );
 
   return response.data.data;
