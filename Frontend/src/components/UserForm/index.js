@@ -25,20 +25,19 @@ import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import Spinner from "../Spinner";
 import Genders from "../../utils/constants/genders";
-import { toasterAndRedirect } from "../../utils/logic";
+import { toasterAndRedirect, removeSpaceBetweenWords } from "../../utils/logic";
 import DialogModal from "../DialogModal";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
+import * as USER_FIELDS from "../../utils/constants/userFormField";
+import {
+  ALL_FIELDS,
+  DEFAULT_VALUEES,
+} from "../../utils/constants/userFormField";
 
 const UserForm = () => {
   const [userBaseInfo, setUserBaseInfo] = useState({});
-  const [userNewInfo, setUserNewInfo] = useState({
-    firstName: "",
-    lastName: "",
-    username: "",
-    email: "",
-    birthday: null,
-    gender: "",
-  });
+  const [userNewInfo, setUserNewInfo] = useState(DEFAULT_VALUEES);
+  const [formfields, setFormfields] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,18 +51,37 @@ const UserForm = () => {
     };
     const userId = params.id;
 
-    if (userId === "profile") {
-      setFlag(FORM_FLAGS.PROFILE);
-      fetchUserData("63e9512605360c2670eb7a89").then(
-        // TODO: Change to connected userID
-        (data) => setUserFirstData(data)
-      );
-    } else if (userId) {
-      setFlag(FORM_FLAGS.EDIT);
-      fetchUserData(userId).then((data) => setUserFirstData(data));
-    } else {
-      setFlag(FORM_FLAGS.ADD);
+    switch (userId) {
+      case RoutesUrls.SIGN_UP:
+        setFlag(FORM_FLAGS.SIGN_UP);
+        setFormfields(USER_FIELDS.SIGN_UP_FIELDS);
+        setUserFirstData(DEFAULT_VALUEES);
+        break;
+      case RoutesUrls.LOGIN:
+        setFlag(FORM_FLAGS.LOGIN);
+        setFormfields(USER_FIELDS.LOGIN_FIELDS);
+        setUserFirstData(DEFAULT_VALUEES);
+        break;
+      case RoutesUrls.PROFILE:
+        setFlag(FORM_FLAGS.PROFILE);
+        setFormfields(USER_FIELDS.PROFILE_FIELDS);
+        fetchUserData("63e9512605360c2670eb7a89").then(
+          // TODO: Change to connected userID
+          (data) => setUserFirstData(data)
+        );
+        break;
+      case undefined:
+        setFormfields(USER_FIELDS.ADD_FIELDS);
+        setFlag(FORM_FLAGS.ADD);
+        setUserFirstData(DEFAULT_VALUEES);
+        break;
+      default:
+        setFlag(FORM_FLAGS.EDIT);
+        setFormfields(USER_FIELDS.EDIT_FIELDS);
+        fetchUserData(userId).then((data) => setUserFirstData(data));
+        break;
     }
+
     setIsLoading(false);
   }, [params]);
 
@@ -146,12 +164,134 @@ const UserForm = () => {
 
   const isUserProfile = flag === FORM_FLAGS.PROFILE;
 
+  const allFormFields = [
+    {
+      fieldName: ALL_FIELDS.FIRST_NAME,
+      content: (
+        <TextField
+          disabled={isUserProfile && !isEditMode}
+          value={userNewInfo.firstName}
+          variant="standard"
+          label="First Name"
+          name="firstName"
+          onChange={handleInputChange}
+        />
+      ),
+    },
+    {
+      fieldName: ALL_FIELDS.LAST_NAME,
+      content: (
+        <TextField
+          disabled={isUserProfile && !isEditMode}
+          value={userNewInfo.lastName}
+          variant="standard"
+          label="Last Name"
+          name="lastName"
+          onChange={handleInputChange}
+        />
+      ),
+    },
+    {
+      fieldName: ALL_FIELDS.USER_NAME,
+      content: (
+        <TextField
+          disabled={isUserProfile && !isEditMode}
+          value={userNewInfo.username}
+          variant="standard"
+          label="User Name"
+          name="username"
+          onChange={handleInputChange}
+        />
+      ),
+    },
+    {
+      fieldName: ALL_FIELDS.PASSWORD,
+      content: (
+        <TextField
+          label="Password"
+          type="password"
+          name="password"
+          autoComplete="current-password"
+          variant="standard"
+          value={userNewInfo.password}
+          onChange={handleInputChange}
+        />
+      ),
+    },
+    {
+      fieldName: ALL_FIELDS.RE_PASSWORD,
+      content: (
+        <TextField
+          label="Re-Password"
+          type="password"
+          name="rePassword"
+          autoComplete="current-password"
+          variant="standard"
+          value={userNewInfo.rePassword}
+          onChange={handleInputChange}
+        />
+      ),
+    },
+    {
+      fieldName: ALL_FIELDS.EMAIL,
+      content: (
+        <TextField
+          disabled={isUserProfile && !isEditMode}
+          value={userNewInfo.email}
+          variant="standard"
+          label="Email"
+          name="email"
+          onChange={handleInputChange}
+        />
+      ),
+    },
+    {
+      fieldName: ALL_FIELDS.BIRTHDAY,
+      content: (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DesktopDatePicker
+            label="Birthday"
+            inputFormat="MM/DD/YYYY"
+            value={userNewInfo.birthday}
+            disabled={isUserProfile && !isEditMode}
+            onChange={handleChangeBirthday}
+            renderInput={(params) => (
+              <TextField variant="standard" {...params} />
+            )}
+          />
+        </LocalizationProvider>
+      ),
+    },
+    {
+      fieldName: ALL_FIELDS.GENDER,
+      content: (
+        <FormControl
+          className="gender-select-fc"
+          variant="standard"
+          disabled={isUserProfile && !isEditMode}
+        >
+          <InputLabel>Gender</InputLabel>
+          <Select
+            value={userNewInfo.gender}
+            onChange={handleInputChange}
+            label="Gender"
+            name="gender"
+          >
+            {Genders.map((gender) => {
+              return <MenuItem value={gender}>{gender}</MenuItem>;
+            })}
+          </Select>
+        </FormControl>
+      ),
+    },
+  ];
+
   return (
     <Container>
       <FormContainer
         className={`profile-form ${
           isEditMode || !isUserProfile ? `edit-mode` : ""
-        }`}
+        } ${removeSpaceBetweenWords(flag)}-form`}
       >
         {isLoading ? (
           <Spinner />
@@ -176,86 +316,22 @@ const UserForm = () => {
               />
             )}
             <FieldsContainer>
-              <FieldContainer>
-                <TextField
-                  disabled={isUserProfile && !isEditMode}
-                  value={userNewInfo.firstName}
-                  variant="standard"
-                  label="First Name"
-                  name="firstName"
-                  onChange={handleInputChange}
-                />
-              </FieldContainer>
-              <FieldContainer>
-                <TextField
-                  disabled={isUserProfile && !isEditMode}
-                  value={userNewInfo.lastName}
-                  variant="standard"
-                  label="Last Name"
-                  name="lastName"
-                  onChange={handleInputChange}
-                />
-              </FieldContainer>
-              <FieldContainer>
-                <TextField
-                  disabled={isUserProfile && !isEditMode}
-                  value={userNewInfo.username}
-                  variant="standard"
-                  label="User Name"
-                  name="username"
-                  onChange={handleInputChange}
-                />
-              </FieldContainer>
-              <FieldContainer>
-                <TextField
-                  disabled={isUserProfile && !isEditMode}
-                  value={userNewInfo.email}
-                  variant="standard"
-                  label="Email"
-                  name="email"
-                  onChange={handleInputChange}
-                />
-              </FieldContainer>
-              <FieldContainer>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    label="Birthday"
-                    inputFormat="MM/DD/YYYY"
-                    value={userNewInfo.birthday}
-                    disabled={isUserProfile && !isEditMode}
-                    onChange={handleChangeBirthday}
-                    renderInput={(params) => (
-                      <TextField variant="standard" {...params} />
-                    )}
-                  />
-                </LocalizationProvider>
-              </FieldContainer>
-              <FieldContainer>
-                <FormControl
-                  className="gender-select-fc"
-                  variant="standard"
-                  disabled={isUserProfile && !isEditMode}
-                >
-                  <InputLabel>Gender</InputLabel>
-                  <Select
-                    value={userNewInfo.gender}
-                    onChange={handleInputChange}
-                    label="Gender"
-                    name="gender"
-                  >
-                    {Genders.map((gender) => {
-                      return <MenuItem value={gender}>{gender}</MenuItem>;
-                    })}
-                  </Select>
-                </FormControl>
-              </FieldContainer>
+              {allFormFields
+                .filter((field) => formfields.includes(field.fieldName))
+                .map((field) => {
+                  return (
+                    <FieldContainer key={field.fieldName}>
+                      {field.content}
+                    </FieldContainer>
+                  );
+                })}
               {isUserProfile ? (
                 <Stack
                   direction="row"
                   spacing={2}
                   sx={{
                     visibility: isEditMode ? "visiable" : "hidden",
-                    marginTop: "10px",
+                    margin: "10px 0",
                   }}
                 >
                   <Button onClick={onCancel}>Cancel</Button>
@@ -267,7 +343,7 @@ const UserForm = () => {
                 <Button
                   variant="contained"
                   onClick={onSubmit}
-                  sx={{ marginTop: "10px" }}
+                  sx={{ margin: "10px 0" }}
                 >
                   {flag}
                 </Button>

@@ -50,7 +50,7 @@ export const UserMenuActions = [
   {
     id: 1,
     displayName: "Profile",
-    urlName: `${RoutesUrls.USER_FORM}/profile`,
+    urlName: `${RoutesUrls.USER_FORM}/${RoutesUrls.PROFILE}`,
     icon: <AccountCircleIcon />,
   },
   {

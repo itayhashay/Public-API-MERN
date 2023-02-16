@@ -37,9 +37,15 @@ header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAp
   position: static !important;
 }
 
-a:-webkit-any-link {
+.sidebar-link {
   text-decoration: none;
   color: #272727;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
 }
 
 .MuiDrawer-root.MuiDrawer-docked.css-1hsz34s-MuiDrawer-docked {
@@ -84,7 +90,7 @@ a:-webkit-any-link {
 }
 
 .profile-form {
-  max-height: 550px;
+  max-height: 460px;
   -webkit-transition: max-height 0.3s cubic-bezier(0, -0.03, 0, 1),
     box-shadow 0.6s ease-out;
   -moz-transition: max-height 0.3s cubic-bezier(0, -0.03, 0, 1),
@@ -98,7 +104,7 @@ a:-webkit-any-link {
 }
 
 .profile-form.edit-mode {
-  max-height: 596.5px;
+  max-height: 500px;
   -webkit-transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
     box-shadow 0.6s ease-out;
   -moz-transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
@@ -109,4 +115,12 @@ a:-webkit-any-link {
     box-shadow 0.6s ease-out;
   transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
     box-shadow 0.6s ease-out;
+}
+
+.Signup-form {
+  max-height: 618px !important;
+}
+
+.Add-form {
+  max-height: 618px !important;
 }

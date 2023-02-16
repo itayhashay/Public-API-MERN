@@ -36,7 +36,7 @@ const Sidebar = () => {
         <List>
           {AdminMenuItems.map((item) => (
             <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-              <Link to={`${item.urlName}`}>
+              <Link className="sidebar-link" to={`${item.urlName}`}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -66,7 +66,7 @@ const Sidebar = () => {
         <List>
           {MenuItems.map((item) => (
             <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-              <Link to={`${item.urlName}`}>
+              <Link className="sidebar-link" to={`${item.urlName}`}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -96,7 +96,7 @@ const Sidebar = () => {
         <List>
           {UserMenuActions.map((item) => (
             <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-              <Link to={`${item.urlName}`}>
+              <Link className="sidebar-link" to={`${item.urlName}`}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,

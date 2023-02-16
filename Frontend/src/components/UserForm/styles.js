@@ -20,10 +20,9 @@ export const FormContainer = styled.div`
 `;
 
 export const TitleText = styled.h1`
-  margin: 0;
+  margin: 10px 0;
   width: 100%;
   text-align: center;
-  margin-top: 10px;
 `;
 
 export const FieldContainer = styled.div`
@@ -33,7 +32,7 @@ export const FieldContainer = styled.div`
   justify-content: space-between;
   max-height: 32px;
   margin: 5px 0;
-  margin: 20px 0;
+  margin: 13px 0;
 `;
 
 export const FieldsContainer = styled.div`
@@ -43,5 +42,4 @@ export const FieldsContainer = styled.div`
   justify-content: space-between;
   height: 80%;
   width: 90%;
-  margin: 15px 0;
 `;

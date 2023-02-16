@@ -21,3 +21,7 @@ export const getPropValue = (propObj, path) => {
 };
 
 export const getFirstLetterAvatar = () => {};
+
+export const removeSpaceBetweenWords = (word) => {
+  return word.split(" ").join("");
+};

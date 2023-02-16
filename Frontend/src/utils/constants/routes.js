@@ -12,6 +12,9 @@ const RoutesUrls = {
   USER_FORM: "user",
   LOGOUT: "logout",
   CATEGORY_FORM: "category",
+  PROFILE: "profile",
+  LOGIN: "login",
+  SIGN_UP: "signup",
 };
 
 export default RoutesUrls;
