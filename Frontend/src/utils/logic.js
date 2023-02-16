@@ -25,3 +25,11 @@ export const getFirstLetterAvatar = () => {};
 export const removeSpaceBetweenWords = (word) => {
   return word.split(" ").join("");
 };
+
+export const filterObjectByKeys = (originalObj, keys) => {
+  return keys.reduce((obj, key) => {
+    return Object.assign(obj, {
+      [key]: originalObj[key],
+    });
+  }, {});
+};

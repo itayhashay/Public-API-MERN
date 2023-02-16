@@ -37,7 +37,7 @@
         "searchUser": "/user/",
         "getById": "/user",
         "createUser": "/user/",
-        "editUser": "/user/",
+        "editUser": "/user",
         "deleteUser": "/user/",
         "login": "/user/login",
         "usersCount": "/user/count"

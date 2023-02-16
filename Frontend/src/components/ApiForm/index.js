@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -13,7 +13,6 @@ import {
   TitleText,
   FieldContainer,
   FieldsContainer,
-  FieldName,
 } from "./styles";
 import { addNewApi, getApiById, getAllCategories } from "../../utils/api";
 import { toasterTypes } from "../../utils/constants/toaster";
@@ -21,15 +20,19 @@ import RoutesUrls from "../../utils/constants/routes";
 import { toasterAndRedirect } from "../../utils/logic";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
 
+const DEFAULT_VALUEES = {
+  name: "",
+  description: "",
+  url: "",
+  category: "",
+};
+
 const ApiForm = () => {
   const [categoriesList, setCategoriesList] = useState([]);
   const [category, setCategory] = useState("");
   const [flag, setFlag] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [apiData, setApiData] = useState({});
-  const apiNameRef = useRef(null);
-  const apiDescRef = useRef(null);
-  const apiUrlRef = useRef(null);
+  const [apiData, setApiData] = useState(DEFAULT_VALUEES);
   const params = useParams();
 
   useEffect(() => {
@@ -43,7 +46,6 @@ const ApiForm = () => {
       setFlag(FORM_FLAGS.EDIT);
       fetchApiData(apiId).then((data) => {
         setApiData(data);
-        setInputValues(data);
       });
     } else {
       setFlag(FORM_FLAGS.ADD);
@@ -53,32 +55,20 @@ const ApiForm = () => {
     getAllCategories().then((categories) => setCategoriesList(categories));
   }, []);
 
-  const setInputValues = (apiData) => {
-    apiNameRef.current.value = apiData.name || "";
-    apiDescRef.current.value = apiData.description || "";
-    apiUrlRef.current.value = apiData.url || "";
-    setCategory(apiData.category.name || "");
-  };
-
-  const handleChange = (event) => {
-    setCategory(event.target.value);
+  const handleInputChange = (event) => {
+    setApiData({
+      ...apiData,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const onSubmit = async () => {
-    const data = {
-      name: apiNameRef.current.value,
-      description: apiDescRef.current.value,
-      url: apiUrlRef.current.value,
-      category: category,
-      img: "",
-    };
-
-    await addNewApi(data);
+    await addNewApi({ ...apiData, img: "" });
 
     toasterAndRedirect(
       {
         toasterType: toasterTypes.SUCCESS,
-        message: `Api ${data.name} Created successfuly!`,
+        message: `Api ${apiData.name} Created successfuly!`,
       },
       RoutesUrls.LATEST_APIS
     );
@@ -90,10 +80,12 @@ const ApiForm = () => {
         <TitleText>{flag} Api</TitleText>
         <FieldsContainer>
           <FieldContainer>
-            <FieldName>Api Name: </FieldName>
             <TextField
               id="standard-basic"
-              inputRef={apiNameRef}
+              value={apiData.name}
+              onChange={handleInputChange}
+              label="Name"
+              name="name"
               variant="standard"
               sx={{
                 width: "-webkit-fill-available",
@@ -101,10 +93,12 @@ const ApiForm = () => {
             />
           </FieldContainer>
           <FieldContainer>
-            <FieldName>Api Description: </FieldName>
             <TextField
               id="standard-basic"
-              inputRef={apiDescRef}
+              value={apiData.description}
+              onChange={handleInputChange}
+              label="Description"
+              name="description"
               variant="standard"
               sx={{
                 width: "-webkit-fill-available",
@@ -112,10 +106,12 @@ const ApiForm = () => {
             />
           </FieldContainer>
           <FieldContainer>
-            <FieldName>Api Url: </FieldName>
             <TextField
               id="standard-basic"
-              inputRef={apiUrlRef}
+              value={apiData.url}
+              onChange={handleInputChange}
+              label="Url"
+              name="url"
               variant="standard"
               sx={{
                 width: "-webkit-fill-available",
@@ -123,7 +119,6 @@ const ApiForm = () => {
             />
           </FieldContainer>
           <FieldContainer>
-            <FieldName>Category: </FieldName>
             <FormControl
               variant="standard"
               sx={{
@@ -133,13 +128,15 @@ const ApiForm = () => {
                 width: "-webkit-fill-available",
               }}
             >
-              <InputLabel id="demo-simple-select-standard-label"></InputLabel>
+              <InputLabel id="demo-simple-select-standard-label">
+                Category
+              </InputLabel>
               <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
-                value={category}
-                onChange={handleChange}
-                label=""
+                id="demo-simple-select-standard-label"
+                value={apiData.category}
+                onChange={handleInputChange}
+                label="Category"
+                name="category"
               >
                 {categoriesList.map((category) => {
                   return (

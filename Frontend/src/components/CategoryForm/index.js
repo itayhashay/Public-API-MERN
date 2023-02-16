@@ -85,7 +85,7 @@ const CategoryForm = () => {
                   sx={{ width: "100%" }}
                   value={categoryData.name}
                   variant="standard"
-                  label="Category Name"
+                  label="Name"
                   name="name"
                   onChange={handleInputChange}
                 />

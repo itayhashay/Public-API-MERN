@@ -25,7 +25,11 @@ import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import Spinner from "../Spinner";
 import Genders from "../../utils/constants/genders";
-import { toasterAndRedirect, removeSpaceBetweenWords } from "../../utils/logic";
+import {
+  toasterAndRedirect,
+  removeSpaceBetweenWords,
+  filterObjectByKeys,
+} from "../../utils/logic";
 import DialogModal from "../DialogModal";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
 import * as USER_FIELDS from "../../utils/constants/userFormField";
@@ -142,7 +146,10 @@ const UserForm = () => {
   };
 
   const saveUserChanges = async () => {
-    await editUser("6373b5a91876e3d4dac2201f", userNewInfo);
+    await editUser(
+      "63e9512605360c2670eb7a89",
+      filterObjectByKeys(userNewInfo, formfields)
+    );
     toasterAndRedirect(
       {
         toasterType: toasterTypes.SUCCESS,

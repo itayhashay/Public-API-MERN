@@ -33,6 +33,7 @@ export const FieldContainer = styled.div`
   max-height: 32px;
   margin: 5px 0;
   margin: 13px 0;
+  max-width: 90%;
 `;
 
 export const FieldsContainer = styled.div`
