@@ -31,10 +31,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    password: {
-        type: String,
-        required: true
-    },
+    // password: {
+    //     type: String,
+    //     required: true
+    // },
     userType: {
         type: String,
         default: 'CLIENT',

@@ -1,9 +1,10 @@
 const express = require('express'),
   Bookmark = require('../Models/bookmark'),
-  { StatusCodes } = require('http-status-codes');
+  { StatusCodes } = require('http-status-codes'),
+  { isAdmin, isLoggedIn } = require("../Services/middleware"),
   router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', isLoggedIn,async (req, res) => {
   try {
     const bookmarks = await Bookmark.find({}).populate('user').populate('api');
     res.status(StatusCodes.OK).send({ data: bookmarks });
@@ -12,7 +13,16 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.get('/user/:userId', async (req, res) => {
+router.get('/me', isLoggedIn,async (req, res) => {
+  try {
+    const bookmarks = await Bookmark.find({ user: req.user.id }).populate('user').populate('api');
+    res.status(StatusCodes.OK).send({ data: bookmarks });
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err } });
+  }
+})
+
+router.get('/user/:userId', isAdmin,async (req, res) => {
   try {
     const {userId} = req.params;
     const bookmarks = await Bookmark.find({ user: userId }).populate('user').populate('api');
@@ -32,9 +42,9 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', isLoggedIn,async (req, res) => {
   try {
-    let userId = "6373b5a91876e3d4dac2201f";
+    let userId = req.user.id;
     const currentBookmarks = await Bookmark.find({ user: userId, api: req.body.apiId });
     console.log(req.body)
     let bookmark;
@@ -67,7 +77,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', isLoggedIn, async (req, res) => {
   try {
     const { id } = req.params;
     const bookmark = await Bookmark.findByIdAndUpdate(id, req.body, { new: true });
@@ -79,7 +89,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isLoggedIn,async (req, res) => {
   try {
     const { id } = req.params;
     const bookmark = await Bookmark.findByIdAndDelete(id);

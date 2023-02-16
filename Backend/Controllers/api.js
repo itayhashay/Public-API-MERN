@@ -1,14 +1,32 @@
 const express = require('express'),
   { StatusCodes } = require('http-status-codes'),
   Api = require('../Models/api'),
+  User = require('../Models/user'),
   Bookmark = require('../Models/bookmark'),
-  Category = require('../Models/category')
-  router = express.Router();
+  Category = require('../Models/category'),
+  { isAdmin, isLoggedIn } = require("../Services/middleware"),
+router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
     const apis = await Api.find({}).populate('uploadBy').populate('category').exec();
     res.status(StatusCodes.OK).send({ data: apis });
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err.message } });
+  }
+})
+
+router.get('/total-upvotes', isAdmin, async (req, res) => {
+  try {
+    const total = await Api.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalUpvotes: { $sum: '$upvotes' }
+        }
+      }
+    ])
+    res.status(StatusCodes.OK).send({ data: total[0].totalUpvotes });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err.message } });
   }
@@ -50,7 +68,7 @@ router.get('/search', async (req, res) => {
       query = [...query, { name: { $regex: q, $options: 'i' } }]
     }
     if (uploadby == 'true') {
-      let users = await User.find({ "name": { $regex: q, $options: 'i' } });
+      let users = await User.find({ name: { $regex: q, $options: 'i' } });
       let userIds = users.map(user => user._id);
       query = [...query, { "uploadBy": { $in: userIds } }]
     }
@@ -69,7 +87,7 @@ router.get('/search', async (req, res) => {
   }
 })
 
-router.get('/count', async (req, res) => {
+router.get('/count', isAdmin,async (req, res) => {
   try {
     const apis_count = await Api.countDocuments();
     res.status(StatusCodes.OK).send({ data: apis_count });
@@ -82,7 +100,7 @@ router.get('/count', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const api = await Api.findById(id);
+    const api = await Api.findById(id).populate("category").populate("uploadBy");
     res.status(StatusCodes.OK).send({ data: api == null ? [] : api })
   } catch (err) {
     if (["CastError", "ValidationError"].includes(err.name)) {
@@ -94,9 +112,9 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', isLoggedIn, async (req, res) => {
   try {
-    req.body.uploadBy = req.cookies.userId ? req.cookies.userId : "6373b5a91876e3d4dac2201f";
+    req.body.uploadBy = req.user.id ? req.user.id : "6373b5a91876e3d4dac2201f";
     const newApi = new Api(req.body);
     await newApi.save();
     const populatedApi = await Api.findById(newApi._id).populate('uploadBy').populate('category');
@@ -110,21 +128,29 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.post('/upvote/:id', async (req, res) => {
+// TODO: ADD ERROR HANDLE WHEN API DOESNT EXIST
+router.post('/upvote/:id', isLoggedIn, async (req, res) => {
   try {
     const { id } = req.params;
     let api = await Api.findById(id);
+    if (!api) {
+      throw new Error({ message: "Api Doesn't Exist"});
+    }
     api.upvotes++;
     api = await Api.findByIdAndUpdate(id, api, { new: true });
     await api.save();
     const populatedApi = await Api.findById(id).populate('uploadBy').populate('category');
     res.status(StatusCodes.OK).send({ data: populatedApi })
-  }  catch (err) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err.message } });
+  } catch (err) {
+    if (err.message === "Api Doesn't Exist") {
+      res.status(StatusCodes.BAD_REQUEST).send({ data: { Error: err.message } });
+    }
+    else
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ data: { Error: err.message } });
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', isAdmin,async (req, res) => {
   try {
     const { id } = req.params;
     const api = await Api.findByIdAndUpdate(id, req.body, { new: true });
@@ -140,7 +166,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAdmin,async (req, res) => {
   try {
     const { id } = req.params;
     const api = await Api.findByIdAndDelete(id);
@@ -155,7 +181,7 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
-router.get('/upvotes/count', async (req, res) => {
+router.get('/upvotes/count', isAdmin, async (req, res) => {
   try {
     const sum_upvotes = await Api.aggregate([
       { $group: { _id: null, sum: { $sum: "$upvotes" } } }
