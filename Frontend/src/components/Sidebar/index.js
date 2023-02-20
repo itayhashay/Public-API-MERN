@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
@@ -16,12 +16,33 @@ import {
   MenuItems,
   UserMenuActions,
 } from "../../utils/constants/sidebarItems";
+import RoutesUrls from "../../utils/constants/routes";
+import { clearStorage, checkIfAdmin } from "../../utils/browser";
+import { toasterAndRedirect } from "../../utils/logic";
+import { toasterTypes } from "../../utils/constants/toaster";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const isAdmin = checkIfAdmin();
+    setIsAdmin(isAdmin);
+  }, []);
 
   const ToogleDrawer = () => {
     setOpen(!open);
+  };
+
+  const logout = () => {
+    clearStorage();
+    toasterAndRedirect(
+      {
+        toasterType: toasterTypes.SUCCESS,
+        message: `Logged Out successfuly`,
+      },
+      `${RoutesUrls.USER_FORM}/${RoutesUrls.LOGIN}`
+    );
   };
 
   return (
@@ -33,36 +54,38 @@ const Sidebar = () => {
             {!open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
-        <List>
-          {AdminMenuItems.map((item) => (
-            <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-              <Link className="sidebar-link" to={`${item.urlName}`}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+        {isAdmin && (
+          <List>
+            {AdminMenuItems.map((item) => (
+              <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
+                <Link className="sidebar-link" to={`${item.urlName}`}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
                     }}
                   >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.displayName}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.displayName}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            ))}
+          </List>
+        )}
+        {isAdmin && <Divider />}
         <List>
           {MenuItems.map((item) => (
             <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
@@ -96,8 +119,9 @@ const Sidebar = () => {
         <List>
           {UserMenuActions.map((item) => (
             <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-              <Link className="sidebar-link" to={`${item.urlName}`}>
+              {item.urlName === RoutesUrls.LOGOUT ? (
                 <ListItemButton
+                  onClick={() => logout()}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
@@ -118,7 +142,31 @@ const Sidebar = () => {
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItemButton>
-              </Link>
+              ) : (
+                <Link className="sidebar-link" to={`${item.urlName}`}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.displayName}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </Link>
+              )}
             </ListItem>
           ))}
         </List>

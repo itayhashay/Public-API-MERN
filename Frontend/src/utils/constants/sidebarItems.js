@@ -1,4 +1,3 @@
-import RoutesUrls from "../constants/routes";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
@@ -12,6 +11,8 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import CodeIcon from "@mui/icons-material/Code";
 import CategoryIcon from "@mui/icons-material/Category";
+
+import RoutesUrls from "../constants/routes";
 
 export const MenuItems = [
   {

@@ -36,7 +36,7 @@
         "apiAmountPerUser": "/user/api-per-user",
         "searchUser": "/user/",
         "getById": "/user",
-        "createUser": "/user/",
+        "createUser": "/user",
         "editUser": "/user",
         "deleteUser": "/user/",
         "login": "/user/login",
@@ -44,8 +44,8 @@
       },
       "auth": {
         "login": "/auth/login",
-        "signup": "/auth/refresh",
-        "refreshToken": "/auth/signup"
+        "signup": "/auth/signup",
+        "refreshToken": "/auth/refresh"
       }
     }
   }

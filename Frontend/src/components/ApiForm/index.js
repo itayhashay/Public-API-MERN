@@ -19,6 +19,7 @@ import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import { toasterAndRedirect } from "../../utils/logic";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
+import { authenticateUser } from "../../utils/browser";
 
 const DEFAULT_VALUEES = {
   name: "",
@@ -29,17 +30,18 @@ const DEFAULT_VALUEES = {
 
 const ApiForm = () => {
   const [categoriesList, setCategoriesList] = useState([]);
-  const [category, setCategory] = useState("");
   const [flag, setFlag] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [apiData, setApiData] = useState(DEFAULT_VALUEES);
   const params = useParams();
 
+  console.log(isLoading); // TODO: Do something
   useEffect(() => {
     const fetchApiData = async (id) => {
       const apiData = await getApiById(id);
       return apiData;
     };
+    // authenticateUser();
     const apiId = params.id;
 
     if (apiId) {
@@ -53,7 +55,7 @@ const ApiForm = () => {
     setIsLoading(false);
 
     getAllCategories().then((categories) => setCategoriesList(categories));
-  }, []);
+  }, [params.id]);
 
   const handleInputChange = (event) => {
     setApiData({

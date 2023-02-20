@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Container, ContentSection, TabContent } from "./styles";
+
+import MainFeed from "../MainFeed";
 import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
 import GenericApiList from "../GenericApiList";
@@ -12,6 +14,7 @@ import CategoryForm from "../CategoryForm";
 import RoutesUrls from "../../utils/constants/routes";
 import * as APIS_FLAGS from "../../utils/flags/apiListFlags";
 import * as MANAGEMENT_FLAGS from "../../utils/flags/managementFlags";
+import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
   return (
@@ -21,6 +24,7 @@ const App = () => {
         <Sidebar />
         <TabContent>
           <Routes>
+            <Route exact path={`/`} element={<MainFeed />}></Route>
             <Route
               path={`/${RoutesUrls.DASHBOARD}`}
               element={<Dashboard />}
@@ -65,12 +69,16 @@ const App = () => {
             <Route
               exact
               path={`/${RoutesUrls.BOOKMARKS}`}
-              element={<GenericApiList flag={APIS_FLAGS.BOOKMARKS} />}
+              element={
+                <PrivateRoute
+                  component={<GenericApiList flag={APIS_FLAGS.BOOKMARKS} />}
+                />
+              }
             ></Route>
             <Route
               exact
               path={`/${RoutesUrls.API_FORM}/:id?`}
-              element={<ApiForm />}
+              element={<PrivateRoute component={<ApiForm />} />}
             ></Route>
             <Route
               path={`/${RoutesUrls.CATEGORY_FORM}/:id?`}

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -12,6 +12,7 @@ import Stack from "@mui/material/Stack";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Alert from "@mui/material/Alert";
 import {
   Container,
   FormContainer,
@@ -19,7 +20,13 @@ import {
   FieldContainer,
   FieldsContainer,
 } from "./styles";
-import { editUser, getUserById } from "../../utils/api";
+import {
+  editUser,
+  getUserById,
+  createUser,
+  signUpUser,
+  loginUser,
+} from "../../utils/api";
 import { toasterMessage } from "../../utils/toasterMessage";
 import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
@@ -29,6 +36,7 @@ import {
   toasterAndRedirect,
   removeSpaceBetweenWords,
   filterObjectByKeys,
+  getUserByToken,
 } from "../../utils/logic";
 import DialogModal from "../DialogModal";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
@@ -37,15 +45,21 @@ import {
   ALL_FIELDS,
   DEFAULT_VALUEES,
 } from "../../utils/constants/userFormField";
+import {
+  getUserDataStorage,
+  setUserDataStorage,
+  authenticateUser,
+} from "../../utils/browser";
 
 const UserForm = () => {
-  const [userBaseInfo, setUserBaseInfo] = useState({});
+  const [userBaseInfo, setUserBaseInfo] = useState(DEFAULT_VALUEES);
   const [userNewInfo, setUserNewInfo] = useState(DEFAULT_VALUEES);
   const [formfields, setFormfields] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [flag, setFlag] = useState("");
+  const [isErrorLogin, setIsErrorLogin] = useState(false);
   const params = useParams();
 
   useEffect(() => {
@@ -67,19 +81,20 @@ const UserForm = () => {
         setUserFirstData(DEFAULT_VALUEES);
         break;
       case RoutesUrls.PROFILE:
+        authenticateUser();
         setFlag(FORM_FLAGS.PROFILE);
         setFormfields(USER_FIELDS.PROFILE_FIELDS);
-        fetchUserData("63e9512605360c2670eb7a89").then(
-          // TODO: Change to connected userID
-          (data) => setUserFirstData(data)
-        );
+        const userStorage = getUserDataStorage();
+        setUserFirstData(userStorage.userInfo);
         break;
       case undefined:
+        authenticateUser();
         setFormfields(USER_FIELDS.ADD_FIELDS);
         setFlag(FORM_FLAGS.ADD);
         setUserFirstData(DEFAULT_VALUEES);
         break;
       default:
+        authenticateUser();
         setFlag(FORM_FLAGS.EDIT);
         setFormfields(USER_FIELDS.EDIT_FIELDS);
         fetchUserData(userId).then((data) => setUserFirstData(data));
@@ -87,7 +102,7 @@ const UserForm = () => {
     }
 
     setIsLoading(false);
-  }, [params]);
+  }, [params.id]);
 
   const setUserFirstData = (userData) => {
     setUserBaseInfo(userData);
@@ -120,14 +135,14 @@ const UserForm = () => {
   };
 
   const toggleEditMode = () => {
-    if (isEditMode) {
-      const isChange = isDataChanged();
-      if (isChange) {
-        setIsModalOpen(true);
-      } else {
-        setIsEditMode(false);
-      }
-    } else setIsEditMode(true);
+    if (!isEditMode) setIsEditMode(true);
+
+    const isChange = isDataChanged();
+    if (isChange) {
+      setIsModalOpen(true);
+    } else {
+      setIsEditMode(false);
+    }
   };
 
   const onCancel = () => {
@@ -146,16 +161,51 @@ const UserForm = () => {
   };
 
   const saveUserChanges = async () => {
-    await editUser(
-      "63e9512605360c2670eb7a89",
-      filterObjectByKeys(userNewInfo, formfields)
-    );
+    const relevantFields = filterObjectByKeys(userNewInfo, formfields);
+    let actionLabel = "";
+    let response = null;
+
+    switch (flag) {
+      case FORM_FLAGS.PROFILE:
+      case FORM_FLAGS.EDIT:
+        response = await editUser("63e9512605360c2670eb7a89", relevantFields);
+        actionLabel = "Edited";
+        break;
+      case FORM_FLAGS.ADD:
+        response = await createUser(relevantFields);
+        actionLabel = "Created";
+        break;
+      case FORM_FLAGS.SIGN_UP:
+        delete relevantFields[ALL_FIELDS.RE_PASSWORD];
+        response = await signUpUser(relevantFields);
+        setUserDataStorage(relevantFields, response.token);
+        actionLabel = "Signed Up";
+        break;
+      case FORM_FLAGS.LOGIN:
+        try {
+          response = await loginUser(relevantFields);
+          const userData = await getUserByToken(response.token);
+          setUserDataStorage(userData, response.token);
+          actionLabel = "Logged In";
+        } catch (error) {
+          if (error.response.status === 401) {
+            setIsErrorLogin(true);
+            return;
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    console.log(response);
+
     toasterAndRedirect(
       {
         toasterType: toasterTypes.SUCCESS,
-        message: "User edited successfuly!",
+        message: `User ${actionLabel} successfuly!`,
       },
-      RoutesUrls.PROFILE
+      RoutesUrls.LATEST_APIS
     );
   };
 
@@ -285,7 +335,11 @@ const UserForm = () => {
             name="gender"
           >
             {Genders.map((gender) => {
-              return <MenuItem value={gender}>{gender}</MenuItem>;
+              return (
+                <MenuItem key={gender} value={gender}>
+                  {gender}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
@@ -307,6 +361,11 @@ const UserForm = () => {
             <TitleText>
               {isUserProfile ? "User Profile" : `${flag} User`}
             </TitleText>
+            {isErrorLogin && (
+              <Alert sx={{ marginBottom: "15px" }} severity="error">
+                Username or password is incorrect.
+              </Alert>
+            )}
             {isUserProfile && (
               <FormControlLabel
                 value="end"

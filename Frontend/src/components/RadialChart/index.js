@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Chart } from "react-google-charts";
 import { Container } from "./styles";
 
 const RadialChart = () => {
-  const [value, setValue] = useState(true);
   const data = [
     ["Task", "Hours per Day"],
     ["Work", 11],

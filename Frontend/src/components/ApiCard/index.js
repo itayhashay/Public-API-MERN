@@ -11,11 +11,9 @@ import Typography from "@mui/material/Typography";
 import { amber } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { DividerLine, UpvotesCount, cardStyles } from "./styles";
 import Button from "@mui/material/Button";
 import { upvoteApi } from "../../utils/api";
-import * as COLORS from "../../utils/colors";
 import Skeleton from "@mui/material/Skeleton";
 
 const ApiCard = ({ apiData }) => {

@@ -1,5 +1,6 @@
 import { toasterMessage } from "./toasterMessage";
 import { redirectToPath } from "./browser";
+import { getUserById } from "./api";
 
 export const toasterAndRedirect = (toasterData, redirectPath) => {
   const { toasterType, message } = toasterData;
@@ -32,4 +33,13 @@ export const filterObjectByKeys = (originalObj, keys) => {
       [key]: originalObj[key],
     });
   }, {});
+};
+
+export const parseJwt = (token) => {
+  return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
+};
+
+export const getUserByToken = async (userToken) => {
+  const tokenData = parseJwt(userToken);
+  return await getUserById(tokenData.id);
 };

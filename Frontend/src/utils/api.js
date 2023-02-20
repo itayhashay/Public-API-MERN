@@ -1,5 +1,11 @@
 import axios from "axios";
 import config from "../config.json";
+import { getUserToken } from "../utils/browser";
+
+const headers = () => {
+  const token = getUserToken();
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
 
 export const getLatestApis = async () => {
   const response = await axios.get(
@@ -28,7 +34,8 @@ export const getRandomApi = async () => {
 export const addNewApi = async (data) => {
   const response = await axios.post(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.createApi}`,
-    data
+    data,
+    headers()
   );
 
   return response.data.data;
@@ -54,7 +61,8 @@ export const getAllCategories = async () => {
 
 export const getAllBookmarks = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.bookmark.getAllBookmark}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.bookmark.getAllBookmark}`,
+    headers()
   );
 
   return response.data.data;
@@ -62,7 +70,8 @@ export const getAllBookmarks = async () => {
 
 export const getUserById = async (userId) => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getById}/${userId}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getById}/${userId}`,
+    headers()
   );
 
   return response.data.data;
@@ -79,7 +88,8 @@ export const getApiById = async (apiId) => {
 export const editUser = async (userId, data) => {
   const response = await axios.put(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.editUser}/${userId}`,
-    data
+    data,
+    headers()
   );
 
   return response.data.data;
@@ -87,7 +97,8 @@ export const editUser = async (userId, data) => {
 
 export const getAllUsers = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getAllUsers}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getAllUsers}`,
+    headers()
   );
 
   return response.data.data;
@@ -95,7 +106,8 @@ export const getAllUsers = async () => {
 
 export const getTotalUpvotes = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getTotalUpvotes}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getTotalUpvotes}`,
+    headers()
   );
 
   return response.data.data;
@@ -120,7 +132,8 @@ export const getCategoryById = async (id) => {
 export const addNewCategory = async (data) => {
   const response = await axios.post(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.createCategory}`,
-    data
+    data,
+    headers()
   );
 
   return response.data.data;
@@ -129,7 +142,8 @@ export const addNewCategory = async (data) => {
 export const editCategory = async (id, data) => {
   const response = await axios.put(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.updateCategory}/${id}`,
-    data
+    data,
+    headers()
   );
 
   return response.data.data;
@@ -137,7 +151,8 @@ export const editCategory = async (id, data) => {
 
 export const deleteCategory = async (id) => {
   const response = await axios.delete(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.deleteCategory}/${id}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.deleteCategory}/${id}`,
+    headers()
   );
 
   return response.data.data;
@@ -145,7 +160,8 @@ export const deleteCategory = async (id) => {
 
 export const deleteUser = async (id) => {
   const response = await axios.delete(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.deleteUser}/${id}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.deleteUser}/${id}`,
+    headers()
   );
 
   return response.data.data;
@@ -153,7 +169,8 @@ export const deleteUser = async (id) => {
 
 export const deleteApi = async (id) => {
   const response = await axios.delete(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.deleteApi}/${id}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.deleteApi}/${id}`,
+    headers()
   );
 
   return response.data.data;
@@ -161,8 +178,37 @@ export const deleteApi = async (id) => {
 
 export const upvoteApi = async (id) => {
   const response = await axios.post(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.upvoteApi}/${id}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.upvoteApi}/${id}`,
+    headers()
   );
 
   return response.data.data;
+};
+
+export const createUser = async (data) => {
+  const response = await axios.post(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.createUser}`,
+    data,
+    headers()
+  );
+
+  return response.data.data;
+};
+
+export const signUpUser = async (data) => {
+  const response = await axios.post(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.auth.signup}`,
+    data
+  );
+
+  return response.data;
+};
+
+export const loginUser = async (data) => {
+  const response = await axios.post(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.auth.login}`,
+    data
+  );
+
+  return response.data;
 };
