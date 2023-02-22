@@ -1,13 +1,126 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: "Nunito"; /*Can be any text*/
+  src: local("Nunito-Regular"),
+    url("./fonts/Nunito/Nunito-Regular.ttf") format("truetype");
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  font-family: "Nunito" !important;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAppBar-colorPrimary.MuiAppBar-positionStatic.css-hip9hq-MuiPaper-root-MuiAppBar-root {
+  height: 100%;
+  max-height: 9vh;
+}
+
+.MuiBox-root.css-i9gxme {
+  max-height: 9vh;
+}
+
+.MuiToolbar-root.MuiToolbar-gutters.MuiToolbar-regular {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  min-height: 9vh;
+}
+
+.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+  position: static !important;
+}
+
+.sidebar-link {
+  text-decoration: none;
+  color: #272727;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+.MuiDrawer-root.MuiDrawer-docked.css-1hsz34s-MuiDrawer-docked {
+  overflow-y: auto;
+  max-height: 91vh;
+}
+
+.css-1x51dt5-MuiInputBase-input-MuiInput-input.Mui-disabled {
+  -webkit-text-fill-color: black !important;
+}
+
+.css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input.Mui-disabled {
+  -webkit-text-fill-color: black !important;
+}
+
+.profile-form .MuiTextField-root {
+  width: 20em;
+}
+
+.gender-select-fc {
+  width: 20em;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.profile-form {
+  max-height: 460px;
+  -webkit-transition: max-height 0.3s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  -moz-transition: max-height 0.3s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  -o-transition: max-height 0.3s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  -ms-transition: max-height 0.3s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  transition: max-height 0.3s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+}
+
+.profile-form.edit-mode {
+  max-height: 500px;
+  -webkit-transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  -moz-transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  -o-transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  -ms-transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+  transition: max-height 0.5s cubic-bezier(0, -0.03, 0, 1),
+    box-shadow 0.6s ease-out;
+}
+
+.Signup-form {
+  max-height: 618px !important;
+}
+
+.Add-form {
+  max-height: 618px !important;
 }
