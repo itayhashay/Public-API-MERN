@@ -4,12 +4,13 @@ import { getUserToken } from "../utils/browser";
 
 const headers = () => {
   const token = getUserToken();
-  return { headers: { Authorization: `Bearer ${token}` } };
+  return { headers: { Authorization: token ? `Bearer ${token}` : undefined } };
 };
 
 export const getLatestApis = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getLatestApis}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getLatestApis}`,
+    headers()
   );
 
   return response.data.data;
@@ -17,7 +18,8 @@ export const getLatestApis = async () => {
 
 export const getBestRatedApis = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getBestRatedApis}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getBestRatedApis}`,
+    headers()
   );
 
   return response.data.data;
@@ -25,7 +27,8 @@ export const getBestRatedApis = async () => {
 
 export const getRandomApi = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getRandomApi}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getRandomApi}`,
+    headers()
   );
 
   return response.data.data;
@@ -45,7 +48,8 @@ export const searchApis = async (q, searchBy) => {
   const { Name, Category, UploadBy } = searchBy;
 
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.searchApi}/?q=${q}&name=${Name}&category=${Category}&uploadby=${UploadBy}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.searchApi}/?q=${q}&name=${Name}&category=${Category}&uploadby=${UploadBy}`,
+    headers()
   );
 
   return response.data.data;
@@ -53,7 +57,8 @@ export const searchApis = async (q, searchBy) => {
 
 export const getAllCategories = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.getAllCategories}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.getAllCategories}`,
+    headers()
   );
 
   return response.data.data;
@@ -79,7 +84,8 @@ export const getUserById = async (userId) => {
 
 export const getApiById = async (apiId) => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getApiById}/${apiId}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getApiById}/${apiId}`,
+    headers()
   );
 
   return response.data.data;
@@ -115,7 +121,8 @@ export const getTotalUpvotes = async () => {
 
 export const getAllApis = async () => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getAllApis}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.getAllApis}`,
+    headers()
   );
 
   return response.data.data;
@@ -123,7 +130,8 @@ export const getAllApis = async () => {
 
 export const getCategoryById = async (id) => {
   const response = await axios.get(
-    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.getById}/${id}`
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.getById}/${id}`,
+    headers()
   );
 
   return response.data.data;
@@ -198,7 +206,8 @@ export const createUser = async (data) => {
 export const signUpUser = async (data) => {
   const response = await axios.post(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.auth.signup}`,
-    data
+    data,
+    headers()
   );
 
   return response.data;
@@ -207,7 +216,8 @@ export const signUpUser = async (data) => {
 export const loginUser = async (data) => {
   const response = await axios.post(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.auth.login}`,
-    data
+    data,
+    headers()
   );
 
   return response.data;
