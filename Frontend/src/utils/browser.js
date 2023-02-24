@@ -26,36 +26,30 @@ export const redirectToPath = (pathname) => {
   window.location.href = `${window.location.origin}/${pathname}`;
 };
 
-export const setUserDataStorage = (userInfo, token) => {
-  localStorage.setItem(
-    "userData",
-    JSON.stringify({
-      userInfo,
-      token,
-    })
-  );
+export const setUserDataStorage = (userInfo) => {
+  localStorage.setItem("userData", JSON.stringify(userInfo));
+};
+
+export const setUserTokenStorage = (token) => {
+  localStorage.setItem("token", JSON.stringify(token));
 };
 
 export const getConnectedUsername = () => {
   const userData = getUserDataStorage();
-  if (userData && userData.userInfo) {
-    return userData.userInfo.username;
-  } else {
-    return "";
-  }
+  return userData ? userData.username : "";
 };
 
 export const getUserDataStorage = () => {
   return JSON.parse(localStorage.getItem("userData"));
 };
 
+export const getUserTokenStorage = () => {
+  return JSON.parse(localStorage.getItem("token"));
+};
+
 export const getUserToken = () => {
-  const userData = getUserDataStorage();
-  if (userData) {
-    return userData.token;
-  } else {
-    return false;
-  }
+  const token = getUserTokenStorage();
+  return token ? token : false;
 };
 
 export const checkIfAdmin = () => {

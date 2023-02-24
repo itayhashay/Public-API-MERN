@@ -38,9 +38,9 @@
         "getById": "/user",
         "createUser": "/user",
         "editUser": "/user",
-        "deleteUser": "/user/",
-        "login": "/user/login",
-        "usersCount": "/user/count"
+        "deleteUser": "/user",
+        "usersCount": "/user/count",
+        "userByToken": "/user/me"
       },
       "auth": {
         "login": "/auth/login",

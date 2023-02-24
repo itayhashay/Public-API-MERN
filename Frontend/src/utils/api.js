@@ -2,8 +2,8 @@ import axios from "axios";
 import config from "../config.json";
 import { getUserToken } from "../utils/browser";
 
-const headers = () => {
-  const token = getUserToken();
+const headers = (token) => {
+  token = token ? token : getUserToken();
   return { headers: { Authorization: token ? `Bearer ${token}` : undefined } };
 };
 
@@ -73,10 +73,19 @@ export const getAllBookmarks = async () => {
   return response.data.data;
 };
 
-export const getUserById = async (userId) => {
+export const getUserById = async (userId, token) => {
   const response = await axios.get(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getById}/${userId}`,
-    headers()
+    headers(token)
+  );
+
+  return response.data.data;
+};
+
+export const getUserInfoByToken = async (token) => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.userByToken}`,
+    headers(token)
   );
 
   return response.data.data;
@@ -187,6 +196,7 @@ export const deleteApi = async (id) => {
 export const upvoteApi = async (id) => {
   const response = await axios.post(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.upvoteApi}/${id}`,
+    {},
     headers()
   );
 
