@@ -15,18 +15,26 @@ import { DividerLine, UpvotesCount, cardStyles } from "./styles";
 import Button from "@mui/material/Button";
 import { upvoteApi } from "../../utils/api";
 import Skeleton from "@mui/material/Skeleton";
+import { toasterMessage } from "../../utils/toasterMessage";
+import { toasterTypes } from "../../utils/constants/toaster";
+import { checkIfUserConnected } from "../../utils/browser";
 
 const ApiCard = ({ apiData }) => {
   const [upvotesCount, setUpvotesCount] = useState(apiData.upvotes);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1200);
+    const isConnected = checkIfUserConnected();
+    setIsConnected(isConnected);
+    setIsLoading(false);
   }, []);
 
   const handleUpvoteApi = async (apiId) => {
+    if (!isConnected) {
+      toasterMessage(toasterTypes.INFO, "Must login to upvoate an api.");
+      return;
+    }
     const newApiData = await upvoteApi(apiId);
     setUpvotesCount(newApiData.upvotes);
   };

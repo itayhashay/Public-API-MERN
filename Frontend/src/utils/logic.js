@@ -1,6 +1,6 @@
 import { toasterMessage } from "./toasterMessage";
 import { redirectToPath } from "./browser";
-import { getUserById } from "./api";
+import { getUserInfoByToken } from "./api";
 
 export const toasterAndRedirect = (toasterData, redirectPath) => {
   const { toasterType, message } = toasterData;
@@ -40,6 +40,5 @@ export const parseJwt = (token) => {
 };
 
 export const getUserByToken = async (userToken) => {
-  const tokenData = parseJwt(userToken);
-  return await getUserById(tokenData.id);
+  return await getUserInfoByToken(userToken);
 };

@@ -13,6 +13,8 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Alert from "@mui/material/Alert";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SendIcon from "@mui/icons-material/Send";
 import {
   Container,
   FormContainer,
@@ -48,6 +50,7 @@ import {
 import {
   getUserDataStorage,
   setUserDataStorage,
+  setUserTokenStorage,
   authenticateUser,
 } from "../../utils/browser";
 
@@ -61,6 +64,7 @@ const UserForm = () => {
   const [flag, setFlag] = useState("");
   const [isErrorLogin, setIsErrorLogin] = useState(false);
   const params = useParams();
+  const [isRequestLoading, setIsRequestLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async (id) => {
@@ -84,8 +88,8 @@ const UserForm = () => {
         authenticateUser();
         setFlag(FORM_FLAGS.PROFILE);
         setFormfields(USER_FIELDS.PROFILE_FIELDS);
-        const userStorage = getUserDataStorage();
-        setUserFirstData(userStorage.userInfo);
+        const userData = getUserDataStorage();
+        setUserFirstData(userData);
         break;
       case undefined:
         authenticateUser();
@@ -135,7 +139,10 @@ const UserForm = () => {
   };
 
   const toggleEditMode = () => {
-    if (!isEditMode) setIsEditMode(true);
+    if (!isEditMode) {
+      setIsEditMode(true);
+      return;
+    }
 
     const isChange = isDataChanged();
     if (isChange) {
@@ -161,6 +168,7 @@ const UserForm = () => {
   };
 
   const saveUserChanges = async () => {
+    setIsRequestLoading(true);
     const relevantFields = filterObjectByKeys(userNewInfo, formfields);
     let actionLabel = "";
     let response = null;
@@ -168,7 +176,8 @@ const UserForm = () => {
     switch (flag) {
       case FORM_FLAGS.PROFILE:
       case FORM_FLAGS.EDIT:
-        response = await editUser("63e9512605360c2670eb7a89", relevantFields);
+        response = await editUser(userBaseInfo._id, relevantFields);
+        setUserDataStorage(response);
         actionLabel = "Edited";
         break;
       case FORM_FLAGS.ADD:
@@ -178,18 +187,21 @@ const UserForm = () => {
       case FORM_FLAGS.SIGN_UP:
         delete relevantFields[ALL_FIELDS.RE_PASSWORD];
         response = await signUpUser(relevantFields);
-        setUserDataStorage(relevantFields, response.token);
+        setUserTokenStorage(response.token);
+        setUserDataStorage(relevantFields);
         actionLabel = "Signed Up";
         break;
       case FORM_FLAGS.LOGIN:
         try {
           response = await loginUser(relevantFields);
+          setUserTokenStorage(response.token);
           const userData = await getUserByToken(response.token);
-          setUserDataStorage(userData, response.token);
+          setUserDataStorage(userData);
           actionLabel = "Logged In";
         } catch (error) {
           if (error.response.status === 401) {
             setIsErrorLogin(true);
+            setIsRequestLoading(false);
             return;
           }
         }
@@ -198,7 +210,7 @@ const UserForm = () => {
         break;
     }
 
-    console.log(response);
+    setIsRequestLoading(false);
 
     toasterAndRedirect(
       {
@@ -220,6 +232,7 @@ const UserForm = () => {
   };
 
   const isUserProfile = flag === FORM_FLAGS.PROFILE;
+  const isLogin = flag === FORM_FLAGS.LOGIN;
 
   const allFormFields = [
     {
@@ -361,7 +374,7 @@ const UserForm = () => {
             <TitleText>
               {isUserProfile ? "User Profile" : `${flag} User`}
             </TitleText>
-            {isErrorLogin && (
+            {isLogin && isErrorLogin && (
               <Alert sx={{ marginBottom: "15px" }} severity="error">
                 Username or password is incorrect.
               </Alert>
@@ -406,13 +419,22 @@ const UserForm = () => {
                   </Button>
                 </Stack>
               ) : (
-                <Button
-                  variant="contained"
+                <LoadingButton
                   onClick={onSubmit}
-                  sx={{ margin: "10px 0" }}
+                  endIcon={<SendIcon />}
+                  loading={isRequestLoading}
+                  loadingPosition="end"
+                  variant="contained"
                 >
-                  {flag}
-                </Button>
+                  <span>{flag}</span>
+                </LoadingButton>
+                // <Button
+                //   variant="contained"
+                //   onClick={onSubmit}
+                //   sx={{ margin: "10px 0" }}
+                // >
+                //   {flag}
+                // </Button>
               )}
             </FieldsContainer>
           </>

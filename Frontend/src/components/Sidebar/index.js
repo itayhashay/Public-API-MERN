@@ -17,17 +17,24 @@ import {
   UserMenuActions,
 } from "../../utils/constants/sidebarItems";
 import RoutesUrls from "../../utils/constants/routes";
-import { clearStorage, checkIfAdmin } from "../../utils/browser";
+import {
+  clearStorage,
+  checkIfAdmin,
+  checkIfUserConnected,
+} from "../../utils/browser";
 import { toasterAndRedirect } from "../../utils/logic";
 import { toasterTypes } from "../../utils/constants/toaster";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const isAdmin = checkIfAdmin();
+    const isConnected = checkIfUserConnected();
     setIsAdmin(isAdmin);
+    setIsConnected(isConnected);
   }, []);
 
   const ToogleDrawer = () => {
@@ -117,34 +124,12 @@ const Sidebar = () => {
         </List>
         <Divider />
         <List>
-          {UserMenuActions.map((item) => (
-            <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-              {item.urlName === RoutesUrls.LOGOUT ? (
-                <ListItemButton
-                  onClick={() => logout()}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.displayName}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              ) : (
-                <Link className="sidebar-link" to={`${item.urlName}`}>
+          {isConnected &&
+            UserMenuActions.map((item) => (
+              <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
+                {item.urlName === RoutesUrls.LOGOUT ? (
                   <ListItemButton
+                    onClick={() => logout()}
                     sx={{
                       minHeight: 48,
                       justifyContent: open ? "initial" : "center",
@@ -165,10 +150,33 @@ const Sidebar = () => {
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
-                </Link>
-              )}
-            </ListItem>
-          ))}
+                ) : (
+                  <Link className="sidebar-link" to={`${item.urlName}`}>
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.displayName}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </Link>
+                )}
+              </ListItem>
+            ))}
         </List>
       </Drawer>
     </>
