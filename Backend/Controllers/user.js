@@ -105,5 +105,14 @@ router.put('/:id', isAdmin, async (req, res) => {
   res.send({ data: user });
 })
 
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findByIdAndDelete(id);
+  await Api.deleteMany({uploadBy: user._id})
+  await Bookmark.deleteMany({ userId: user._id });
+  delete user['_doc']["password"];
+  res.send({ data: user });
+})
+
 
 module.exports = router;
