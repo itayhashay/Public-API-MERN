@@ -232,3 +232,12 @@ export const loginUser = async (data) => {
 
   return response.data;
 };
+
+export const getAmountsOfApis = async () => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.category.getAmountsOfApis}`,
+    headers()
+  )
+
+  return response.data.data;
+}
