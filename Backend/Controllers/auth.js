@@ -68,7 +68,11 @@ router.post("/refresh", async (req, res) => {
         .send({ error: "User not found" });
     }
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { id: user._id, userType: user.userType, username: user.username },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
     res.status(StatusCodes.OK).send({ token });
   } catch (err) {
     if (err.name === "TokenExpiredError") {
@@ -126,8 +130,15 @@ router.post("/signup", async (req, res) => {
     });
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
-    const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET);
+    const token = jwt.sign(
+      { id: user._id, userType: user.userType, username: user.username },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    const refreshToken = jwt.sign(
+      { id: user._id, userType: user.userType, username: user.username },
+      REFRESH_SECRET
+    );
 
     return res.status(StatusCodes.CREATED).send({ token, refreshToken });
   } catch (err) {
