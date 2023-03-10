@@ -20,7 +20,7 @@ import Skeleton from "@mui/material/Skeleton";
 import {PieChartSvg} from "../PieChart";
 import Spinner from "../Spinner";
 
-const Dashboard = () => {
+const Dashboard = ({onlineUsers}) => {
   const [analytics, setAnalytics] = useState({
     apisCount: 0,
     usersCount: 0,
@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [chartSvg, setChartSvg] = useState(<></>);
 
   useEffect(() => {
+    console.log(onlineUsers)
     const getAnalyticsData = async () => {
       const apis = await getAllApis();
       const users = await getAllUsers();
@@ -73,7 +74,7 @@ const Dashboard = () => {
 
     });
 
-  }, []);
+  }, [onlineUsers]);
 
   const analyticsContent = [
     {

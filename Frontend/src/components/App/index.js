@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Routes, Route } from "react-router-dom";
 import { Container, ContentSection, TabContent } from "./styles";
 
@@ -10,6 +11,7 @@ import UserForm from "../UserForm";
 import Dashboard from "../Dashboard";
 import Management from "../Management";
 import CategoryForm from "../CategoryForm";
+import OnlineUsers from '../../OnlineUsers';
 
 import RoutesUrls from "../../utils/constants/routes";
 import * as APIS_FLAGS from "../../utils/flags/apiListFlags";
@@ -17,17 +19,24 @@ import * as MANAGEMENT_FLAGS from "../../utils/flags/managementFlags";
 import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
+  const [users, setUsers] = useState(0);
+  const setOnlineUsers = (onlineUsers) => {
+    setUsers(onlineUsers);
+    
+}
+
   return (
     <Container>
       <Navbar />
       <ContentSection>
         <Sidebar />
         <TabContent>
+          <OnlineUsers setOnlineUsers={setOnlineUsers} />
           <Routes>
             <Route exact path={`/`} element={<MainFeed />}></Route>
             <Route
               path={`/${RoutesUrls.DASHBOARD}`}
-              element={<Dashboard />}
+              element={<Dashboard onlineUsers={users} />}
             ></Route>
             <Route
               path={`/${RoutesUrls.MANAGE_APIS}`}
