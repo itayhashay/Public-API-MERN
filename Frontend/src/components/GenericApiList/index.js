@@ -6,7 +6,7 @@ import {
   getLatestApis,
   getRandomApi,
   searchApis,
-  getAllBookmarks,
+  getConnectedUserBookmark,
 } from "../../utils/api";
 import ApiCard from "../ApiCard";
 import { useLocation } from "react-router-dom";
@@ -21,8 +21,15 @@ const useQuery = () => {
 const GenericApiList = ({ flag }) => {
   const [apis, setApis] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userBookmark, setUserBookmark] = useState([]);
 
   let query = useQuery();
+
+  useEffect(() => {
+    getConnectedUserBookmark().then((response) => {
+      setUserBookmark(response.map((apiData) => apiData.api));
+    })
+  }, []);
 
   useEffect(() => {
     const fetchApis = async (flag) => {
@@ -36,7 +43,7 @@ const GenericApiList = ({ flag }) => {
           apiResponse = await getBestRatedApis();
           break;
         case APIS_FLAGS.BOOKMARKS:
-          apiResponse = await getAllBookmarks();
+          apiResponse = userBookmark;
           break;
         case APIS_FLAGS.RANDOM_API:
           let randomApi = await getRandomApi();
@@ -60,7 +67,7 @@ const GenericApiList = ({ flag }) => {
       setApis(data);
       setIsLoading(false);
     });
-  }, [flag, query]);
+  }, [flag, query, userBookmark]);
 
   return (
     <>
@@ -71,7 +78,7 @@ const GenericApiList = ({ flag }) => {
           {apis.map((api) => {
             return (
               <div key={api._id}>
-                <ApiCard apiData={api} />
+                <ApiCard apiData={api} userBookmark={userBookmark}/>
               </div>
             );
           })}

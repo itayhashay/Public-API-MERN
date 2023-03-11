@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -13,22 +13,28 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { DividerLine, UpvotesCount, cardStyles } from "./styles";
 import Button from "@mui/material/Button";
-import { upvoteApi } from "../../utils/api";
+import { upvoteApi, toggleApiToBookmark } from "../../utils/api";
 import Skeleton from "@mui/material/Skeleton";
 import { toasterMessage } from "../../utils/toasterMessage";
 import { toasterTypes } from "../../utils/constants/toaster";
 import { checkIfUserConnected } from "../../utils/browser";
 
-const ApiCard = ({ apiData }) => {
+const ApiCard = ({ apiData, userBookmark }) => {
   const [upvotesCount, setUpvotesCount] = useState(apiData.upvotes);
   const [isLoading, setIsLoading] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
+  const [isApiInBookmark, setIsApiInBookmark] = useState(false);
 
   useEffect(() => {
     const isConnected = checkIfUserConnected();
     setIsConnected(isConnected);
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    const foundedApi = userBookmark.find((api) => api._id === apiData._id);
+    setIsApiInBookmark (foundedApi !== undefined);
+  }, [apiData, userBookmark]);
 
   const handleUpvoteApi = async (apiId) => {
     if (!isConnected) {
@@ -38,6 +44,16 @@ const ApiCard = ({ apiData }) => {
     const newApiData = await upvoteApi(apiId);
     setUpvotesCount(newApiData.upvotes);
   };
+
+  const handleBookmarkClicked = async (apiId) => {
+    if (!isConnected) {
+      toasterMessage(toasterTypes.INFO, "Must login to manage bookmark.");
+      return;
+    }
+    await toggleApiToBookmark({apiId});
+    setIsApiInBookmark(!isApiInBookmark);
+    toasterMessage(toasterTypes.SUCCESS, `Api ${!isApiInBookmark ? "added to" : "removed from"} bookmark!`);
+  }
 
   return (
     <Card sx={cardStyles}>
@@ -100,8 +116,8 @@ const ApiCard = ({ apiData }) => {
         >
           Learn more
         </Button>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon color="error" />
+        <IconButton aria-label="add to favorites" onClick={() => handleBookmarkClicked(apiData._id)}>
+          <FavoriteIcon color={isApiInBookmark ? "error" : "default"} />
         </IconButton>
       </CardActions>
     </Card>

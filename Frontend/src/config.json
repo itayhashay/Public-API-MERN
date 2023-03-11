@@ -28,8 +28,8 @@
         "getAllBookmark": "/bookmark/",
         "getByUser": "/bookmark/user/",
         "getById": "/bookmark/",
-        "addBookmark": "/bookmark/",
-        "deleteBookmark": "/bookmark/"
+        "getConnectedUserBookmark": "/bookmark/me",
+        "toggleApiBookmark": "/bookmark/"
       },
       "users": {
         "getAllUsers": "/user/",

@@ -73,6 +73,26 @@ export const getAllBookmarks = async () => {
   return response.data.data;
 };
 
+export const getConnectedUserBookmark = async () => {
+  const response = await axios.get(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.bookmark.getConnectedUserBookmark}`,
+    headers()
+  );
+
+  return response.data.data;
+};
+
+
+export const toggleApiToBookmark = async (data) => {
+  const response = await axios.post(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.bookmark.toggleApiBookmark}`,
+    data,
+    headers()
+  );
+
+  return response.data.data;
+};
+
 export const getUserById = async (userId, token) => {
   const response = await axios.get(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getById}/${userId}`,

@@ -16,6 +16,7 @@ import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import CodeIcon from "@mui/icons-material/Code";
+import PeopleIcon from "@mui/icons-material/People";
 import Skeleton from "@mui/material/Skeleton";
 import {PieChartSvg} from "../PieChart";
 import Spinner from "../Spinner";
@@ -77,6 +78,11 @@ const Dashboard = ({onlineUsers}) => {
   }, [onlineUsers]);
 
   const analyticsContent = [
+    {
+      icon: <PeopleIcon sx={CountIconStyles} />,
+      title: "Online Users",
+      count: onlineUsers,
+    },
     {
       icon: <CodeIcon sx={CountIconStyles} />,
       title: "Total APIs",
