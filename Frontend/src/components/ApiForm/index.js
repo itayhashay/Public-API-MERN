@@ -19,6 +19,7 @@ import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import { toasterAndRedirect } from "../../utils/logic";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
+import config from "../../config.json";
 
 const DEFAULT_VALUEES = {
   name: "",
@@ -63,11 +64,11 @@ const ApiForm = () => {
     let actionType = '';
     switch (flag) {
       case FORM_FLAGS.ADD:
-        await addNewApi({ ...apiData, img: "" });
+        await addNewApi({ ...apiData, img: config.defaultApiImageUrl });
         actionType = 'created';
         break;
       case FORM_FLAGS.EDIT:
-        await editApi(params.id, { ...apiData, img: "" });
+        await editApi(params.id, apiData);
         actionType = 'edited';
         break;  
       default:

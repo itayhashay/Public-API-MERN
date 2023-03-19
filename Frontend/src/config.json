@@ -48,5 +48,6 @@
         "refreshToken": "/auth/refresh"
       }
     }
-  }
+  },
+  "defaultApiImageUrl": "https://images.unsplash.com/photo-1485833077593-4278bba3f11f?ixid=Mnw0MDkyNjl8MHwxfHNlYXJjaHw5fHxBbmltYWxzfGVufDB8fHx8MTY3NjE1MjkyOQ&ixlib=rb-4.0.3"
 }
