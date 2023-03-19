@@ -130,6 +130,16 @@ export const editUser = async (userId, data) => {
   return response.data.data;
 };
 
+export const editApi = async (apiId, data) => {
+  const response = await axios.put(
+    `${config.serverConfig.baseUrl}${config.serverConfig.routes.api.updateApi}/${apiId}`,
+    data,
+    headers()
+  );
+
+  return response.data.data;
+};
+
 export const getAllUsers = async () => {
   const response = await axios.get(
     `${config.serverConfig.baseUrl}${config.serverConfig.routes.users.getAllUsers}`,

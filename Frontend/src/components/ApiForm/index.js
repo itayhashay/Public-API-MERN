@@ -14,12 +14,11 @@ import {
   FieldContainer,
   FieldsContainer,
 } from "./styles";
-import { addNewApi, getApiById, getAllCategories } from "../../utils/api";
+import { addNewApi, getApiById, getAllCategories, editApi } from "../../utils/api";
 import { toasterTypes } from "../../utils/constants/toaster";
 import RoutesUrls from "../../utils/constants/routes";
 import { toasterAndRedirect } from "../../utils/logic";
 import * as FORM_FLAGS from "../../utils/flags/formFlags";
-import { authenticateUser } from "../../utils/browser";
 
 const DEFAULT_VALUEES = {
   name: "",
@@ -31,17 +30,14 @@ const DEFAULT_VALUEES = {
 const ApiForm = () => {
   const [categoriesList, setCategoriesList] = useState([]);
   const [flag, setFlag] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [apiData, setApiData] = useState(DEFAULT_VALUEES);
   const params = useParams();
 
-  console.log(isLoading); // TODO: Do something
   useEffect(() => {
     const fetchApiData = async (id) => {
       const apiData = await getApiById(id);
       return apiData;
     };
-    // authenticateUser();
     const apiId = params.id;
 
     if (apiId) {
@@ -52,7 +48,6 @@ const ApiForm = () => {
     } else {
       setFlag(FORM_FLAGS.ADD);
     }
-    setIsLoading(false);
 
     getAllCategories().then((categories) => setCategoriesList(categories));
   }, [params.id]);
@@ -65,12 +60,24 @@ const ApiForm = () => {
   };
 
   const onSubmit = async () => {
-    await addNewApi({ ...apiData, img: "" });
+    let actionType = '';
+    switch (flag) {
+      case FORM_FLAGS.ADD:
+        await addNewApi({ ...apiData, img: "" });
+        actionType = 'created';
+        break;
+      case FORM_FLAGS.EDIT:
+        await editApi(params.id, { ...apiData, img: "" });
+        actionType = 'edited';
+        break;  
+      default:
+        break;
+    }
 
     toasterAndRedirect(
       {
         toasterType: toasterTypes.SUCCESS,
-        message: `Api ${apiData.name} Created successfuly!`,
+        message: `Api ${apiData.name} ${actionType} successfuly!`,
       },
       RoutesUrls.LATEST_APIS
     );
