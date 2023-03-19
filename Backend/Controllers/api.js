@@ -65,19 +65,18 @@ router.get('/search', async (req, res) => {
     let { name, uploadby, category, q } = req.query;
     let query = [];
     if (name == 'true') {
-      query = [...query, { name: { $regex: q, $options: 'i' } }]
+      query = [...query, { name: { $regex: q, $options: 'i' }}]
     }
     if (uploadby == 'true') {
-      let users = await User.find({ name: { $regex: q, $options: 'i' } });
+      let users = await User.find({ username: { $regex: q, $options: 'i' } });
       let userIds = users.map(user => user._id);
       query = [...query, { "uploadBy": { $in: userIds } }]
     }
     if (category == 'true') {
-      let categories = await Category.find({ name: { $regex: q, $options: 'i' } });
+      let categories = await Category.find({ name: { $regex: q, $options: 'i' }});
       let categoryIds = categories.map(category => category._id);
-      query = [...query, { category: { $in: categoryIds } }]
+      query = [...query, { "category": { $in: categoryIds} }]
     }
-    console.log(query)
     const api = await Api.find({
       $or: query
     }).populate("category").populate("uploadBy");
