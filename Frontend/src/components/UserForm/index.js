@@ -177,7 +177,7 @@ const UserForm = () => {
       case FORM_FLAGS.PROFILE:
       case FORM_FLAGS.EDIT:
         response = await editUser(userBaseInfo._id, relevantFields);
-        setUserDataStorage(response);
+        if(flag === FORM_FLAGS.PROFILE) setUserDataStorage(response);
         actionLabel = "Edited";
         break;
       case FORM_FLAGS.ADD:
